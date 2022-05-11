@@ -10,8 +10,11 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
-*.local
 cypress/downloads
+*.local
+.env*
+!.env.example
+!.env.test
 
 # Editor directories and files
 .vscode/*

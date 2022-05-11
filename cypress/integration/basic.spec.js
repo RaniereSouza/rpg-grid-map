@@ -1,6 +1,6 @@
 describe('Basic test', () => {
   beforeEach(() => {
-    cy.visit('http://localhost:8085')
+    cy.visit('/')
   })
 
   it('should have a <h1> with the text "Hello RPG Grid!"', () => {
