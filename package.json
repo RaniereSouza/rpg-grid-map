@@ -6,9 +6,10 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test:open": "vite --config vite.test-config.js & cypress open"
+    "test:open": "concurrently --kill-others \"vite --config vite.test-config.js\" \"cypress open\""
   },
   "devDependencies": {
+    "concurrently": "^7.1.0",
     "cypress": "^9.6.1",
     "vite": "^2.9.7"
   }
