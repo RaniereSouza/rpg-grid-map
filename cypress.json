@@ -1,4 +1,5 @@
 {
   "viewportWidth": 1336,
-  "viewportHeight": 768
+  "viewportHeight": 768,
+  "testFiles": "**/*.{feature,features}"
 }
