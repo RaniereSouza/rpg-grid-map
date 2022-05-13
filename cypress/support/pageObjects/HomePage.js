@@ -6,11 +6,11 @@ class HomePage {
   }
 
   titleIsVisible() {
-    homeElements.title().should('be.visible')
+    homeElements.title.should('be.visible')
   }
 
   titleHasTextContent(text) {
-    homeElements.title().should('contain.text', text)
+    homeElements.title.should('contain.text', text)
   }
 }
 

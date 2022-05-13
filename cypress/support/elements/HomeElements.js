@@ -1,5 +1,5 @@
 class HomeElements {
-  title() {
+  get title() {
     return cy.get('*[data-testid="home-title"]')
   }
 }
