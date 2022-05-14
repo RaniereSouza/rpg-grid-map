@@ -8,6 +8,7 @@ With those tools the DMs can manage the entire game if they want, even character
 
 ## Concepts, technologies and tools (that I hope) to apply
 * BDD (Behaviour Driven Development)
+* Cucumber/Gherkin
 * Cypress
 * Vite
 * Three.js
