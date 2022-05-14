@@ -17,5 +17,5 @@ With those tools the DMs can manage the entire game if they want, even character
 * WebSockets
 * Docker/Docker Compose
 * Monorepo
-* GitHub Actions (CI)
+* GitHub Actions (CI/CD)
 * (More descriptions soon...)
