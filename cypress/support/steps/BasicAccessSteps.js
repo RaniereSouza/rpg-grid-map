@@ -10,6 +10,6 @@ When('The main message is available', () => {
   homePage.titleIsVisible()
 })
 
-Then('I should be greeted', () => {
-  homePage.titleHasTextContent('Hello, adventurer!')
+Then('I should be greeted with {string}', greeting => {
+  homePage.titleHasTextContent(greeting)
 })

@@ -5,4 +5,4 @@ Feature: Basic application access
   Scenario: Being greeted when accessing the application
     Given I access the application
     When The main message is available
-    Then I should be greeted
+    Then I should be greeted with "Hello, adventurer!"
