@@ -4,7 +4,7 @@ export default defineConfig(() => {
   const env = loadEnv('test', process.cwd(), '')
 
   return {
-    server: {
+    preview: {
       port: parseInt(env.PORT || '3000'),
     },
   }

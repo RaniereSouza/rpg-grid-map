@@ -1,12 +1,14 @@
 {
   "name": "rpg-grid-map",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test:open": "concurrently --kill-others \"vite --config vite.test-config.js\" \"cypress open\""
+    "cypress": "cypress open",
+    "serve:test": "concurrently \"npm:build -- --watch\" \"npm:preview -- --config vite.test-config.js\"",
+    "test:open": "concurrently --kill-others \"npm:serve:test\" \"npm:cypress\""
   },
   "devDependencies": {
     "concurrently": "^7.1.0",
