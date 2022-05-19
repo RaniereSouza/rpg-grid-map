@@ -12,6 +12,10 @@ class HomePage {
   titleHasTextContent(text) {
     homeElements.title.should('contain.text', text)
   }
+
+  chooseMapCreation() {
+    homeElements.mapCreationButton.click()
+  }
 }
 
 export default new HomePage()
