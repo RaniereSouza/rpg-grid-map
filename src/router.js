@@ -1,10 +1,11 @@
-import HomeComponent from './pages/Home'
+import HomeComponent        from './pages/Home'
+import MapCreationComponent from './pages/MapCreation'
 
 class Router {
   __currentRoute = {}
   __routes = [
     {path: '/',             component: new HomeComponent()},
-    {path: '/map-creation', component: {render: () => console.log('viewing Map Creation page')}},
+    {path: '/map-creation', component: new MapCreationComponent()},
   ]
 
   get __potentialMatches() {
