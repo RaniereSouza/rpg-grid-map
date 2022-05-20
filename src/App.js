@@ -1,9 +1,9 @@
-import Router from './router'
+import Router, { routes } from './router'
 
 class App {
   constructor(root) {
     this.__root   = root
-    this.__router = Router.create(this.__root)
+    this.__router = Router.create(this.__root, routes)
     return new Proxy(this, {})
   }
 

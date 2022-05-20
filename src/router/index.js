@@ -1,12 +1,9 @@
-import HomeComponent        from './pages/Home'
-import MapCreationComponent from './pages/MapCreation'
+import routesList from './routes'
+
+export const routes = routesList
 
 class Router {
   __currentRoute = {}
-  __routes = [
-    {path: '/',             component: new HomeComponent()},
-    {path: '/map-creation', component: new MapCreationComponent()},
-  ]
 
   get __potentialMatches() {
     return this.__routes.map(route => {
@@ -17,8 +14,9 @@ class Router {
     })
   }
 
-  constructor(pageContainer) {
+  constructor(pageContainer, routes = []) {
     this.__pageContainer      = pageContainer
+    this.__routes             = routes
     this.__watchForNavigation = this.__watchForNavigation.bind(this)
     this.__navigateTo         = this.__navigateTo.bind(this)
     this.__matchCurrentRoute  = this.__matchCurrentRoute.bind(this)
@@ -38,8 +36,8 @@ class Router {
     })
   }
 
-  static create(pageContainer) {
-    return new Router(pageContainer)
+  static create(pageContainer, routes) {
+    return new Router(pageContainer, routes)
   }
 
   __watchForNavigation() {
@@ -64,7 +62,7 @@ class Router {
     if (!match) match = {
       route: {
         path:      location.pathname,
-        component: {render: () => console.log('404: Not Found')}
+        component: {render: () => console.log('404: Not Found')},
       },
       isMatch: true,
     }
