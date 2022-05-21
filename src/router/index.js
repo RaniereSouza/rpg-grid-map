@@ -64,15 +64,15 @@ class Router {
     let match = this.__potentialMatches.find(item => item.isMatch)
     if (!match) match = {
       route: {
-        path:      location.pathname,
-        component: {render: () => console.log('404: Not Found')},
+        path: location.pathname,
+        view: {render: () => console.log('404: Not Found')},
       },
       isMatch: true,
     }
 
     console.log('current route match:', match)
     this.__currentRoute = match.route
-    this.__currentRoute.component.render(this.__pageContainer)
+    this.__currentRoute.view.render(this.__pageContainer)
   }
 }
 

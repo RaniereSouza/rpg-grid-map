@@ -1,11 +1,13 @@
-import Component from '../../lib/Component'
+import View from '../../lib/View'
 
-class HomeComponent extends Component {
+class HomeView extends View {
+  __title = 'Home'
+
   constructor() {
     super()
   }
 
-  __template() {
+  __htmlTemplate() {
     return `
       <style>
         h1 {
@@ -28,4 +30,4 @@ class HomeComponent extends Component {
   }
 }
 
-export default HomeComponent
+export default HomeView

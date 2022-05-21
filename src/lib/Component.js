@@ -1,7 +1,7 @@
 class Component {
   constructor() {
-    this.__template = this.__template.bind(this)
-    this.__render   = this.__render.bind(this)
+    this.__htmlTemplate = this.__htmlTemplate.bind(this)
+    this.__render       = this.__render.bind(this)
 
     return new Proxy(this, {
       get: (target, key) => {
@@ -16,12 +16,12 @@ class Component {
     })
   }
 
-  __template(context) {
+  __htmlTemplate(context) {
     return `<></>`
   }
 
   __render(parent) {
-    parent.innerHTML = this.__template(this)
+    parent.innerHTML = this.__htmlTemplate(this)
   }
 }
 

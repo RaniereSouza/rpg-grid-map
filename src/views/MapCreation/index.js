@@ -1,11 +1,13 @@
-import Component from '../../lib/Component'
+import View from '../../lib/View'
 
-class MapCreationComponent extends Component {
+class MapCreationView extends View {
+  __title = 'Map Creation'
+  
   constructor() {
     super()
   }
 
-  __template() {
+  __htmlTemplate() {
     return `
       <style>
         h1 {
@@ -33,4 +35,4 @@ class MapCreationComponent extends Component {
   }
 }
 
-export default MapCreationComponent
+export default MapCreationView
