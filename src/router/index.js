@@ -48,8 +48,11 @@ class Router {
           this.__navigateTo(event.target.getAttribute('href'))
         }
       })
+      
       this.__matchCurrentRoute()
     })
+
+    window.addEventListener('popstate', this.__matchCurrentRoute)
   }
 
   __navigateTo(path) {
