@@ -1,19 +1,8 @@
-class HomeComponent {
+import Component from '../../lib/Component'
+
+class HomeComponent extends Component {
   constructor() {
-    this.__template = this.__template.bind(this)
-    this.__render   = this.__render.bind(this)
-
-    return new Proxy(this, {
-      get: (target, key) => {
-        const keyString   = String(key)
-        const visibleKeys = ['render']
-        if (!visibleKeys.includes(keyString)) return undefined
-
-        if (keyString === 'render') return function() {
-          target.__render.apply(target, arguments)
-        }
-      }
-    })
+    super()
   }
 
   __template() {
@@ -36,11 +25,6 @@ class HomeComponent {
         </a>
       </div>
     `
-  }
-
-  __render(parent) {
-    console.log('HomeComponent render parent:', parent)
-    parent.innerHTML = this.__template()
   }
 }
 
