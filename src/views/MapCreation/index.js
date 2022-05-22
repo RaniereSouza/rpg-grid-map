@@ -32,7 +32,7 @@ class MapCreationView extends View {
         <label for="map-creation-height">Height</label>
         <input id="map-creation-height" type="number" step="1" data-testid="map-creation-height-input" />
 
-        <button>Create</button>
+        <button data-testid="map-creation-confirm-button">Create</button>
       </fieldset>
     `
   }

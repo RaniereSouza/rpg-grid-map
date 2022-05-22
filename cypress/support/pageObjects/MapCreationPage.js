@@ -8,6 +8,10 @@ class MapCreationPage {
   chooseHeightByInput(height) {
     mapCreationElements.heightInput.type(String(height))
   }
+
+  confirmGridCreation() {
+    mapCreationElements.confirmCreationButton.click()
+  }
 }
 
 export default new MapCreationPage()
