@@ -14,8 +14,8 @@ class Router {
     })
   }
 
-  constructor(pageContainer, routes = []) {
-    this.__pageContainer      = pageContainer
+  constructor(viewContainer, routes = []) {
+    this.__viewContainer      = viewContainer
     this.__routes             = routes
     this.__watchForNavigation = this.__watchForNavigation.bind(this)
     this.__navigateTo         = this.__navigateTo.bind(this)
@@ -36,8 +36,8 @@ class Router {
     })
   }
 
-  static create(pageContainer, routes) {
-    return new Router(pageContainer, routes)
+  static create(viewContainer, routes) {
+    return new Router(viewContainer, routes)
   }
 
   __watchForNavigation() {
@@ -72,7 +72,7 @@ class Router {
 
     console.log('current route match:', match)
     this.__currentRoute = match.route
-    this.__currentRoute.view.render(this.__pageContainer)
+    this.__currentRoute.view.render(this.__viewContainer)
   }
 }
 
