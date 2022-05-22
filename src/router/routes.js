@@ -1,9 +1,9 @@
-import HomeView        from '../views/Home'
-import MapCreationView from '../views/MapCreation'
+import Home        from '../views/Home'
+import MapCreation from '../views/MapCreation'
 
 const routes = [
-  {path: '/',             view: new HomeView()},
-  {path: '/map-creation', view: new MapCreationView()},
+  {path: '/',             view: new Home()},
+  {path: '/map-creation', view: new MapCreation()},
 ]
 
 export default routes
