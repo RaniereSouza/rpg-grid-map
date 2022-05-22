@@ -7,18 +7,21 @@ class MapCreationView extends View {
     super()
   }
 
-  __htmlTemplate() {
+  __style() {
     return `
-      <style>
-        h1 {
-          animation: fade-in 1.5s linear;
-        }
+      h1 {
+        animation: fade-in 1.5s linear;
+      }
 
-        fieldset {
-          margin:    0 auto;
-          max-width: 720px;
-        }
-      </style>
+      fieldset {
+        margin:    0 auto;
+        max-width: fit-content;
+      }
+    `
+  }
+
+  __htmlTemplate(context) {
+    return `
       <h1>Map Creation</h1>
       <fieldset>
         <legend>What dimensions do you want for your grid?</legend>

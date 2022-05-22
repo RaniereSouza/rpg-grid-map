@@ -1,5 +1,6 @@
 class Component {
   constructor() {
+    this.__style        = this.__style.bind(this)
     this.__htmlTemplate = this.__htmlTemplate.bind(this)
     this.__render       = this.__render.bind(this)
 
@@ -16,12 +17,21 @@ class Component {
     })
   }
 
+  __style(context) {
+    return ``
+  }
+
   __htmlTemplate(context) {
     return `<></>`
   }
 
   __render(parent) {
-    parent.innerHTML = this.__htmlTemplate(this)
+    parent.innerHTML = `
+      <style>
+        ${this.__style(this)}
+      </style>
+      ${this.__htmlTemplate(this)}
+    `
   }
 }
 

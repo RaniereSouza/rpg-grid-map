@@ -7,18 +7,21 @@ class HomeView extends View {
     super()
   }
 
+  __style() {
+    return `
+      h1 {
+        animation: fade-in 1.5s linear;
+      }
+
+      a[data-link] {
+        text-decoration: none;
+        color:           inherit;
+      }
+    `
+  }
+
   __htmlTemplate() {
     return `
-      <style>
-        h1 {
-          animation: fade-in 1.5s linear;
-        }
-    
-        a[data-link] {
-          text-decoration: none;
-          color:           inherit;
-        }
-      </style>
       <h1 data-testid="home-title">Hello, adventurer!</h1>
       <div>
         <p>What do you want to do?</p>
