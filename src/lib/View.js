@@ -11,7 +11,8 @@ class View extends Component {
     document.title = this.__title
   }
 
-  __render(parent) {
+  __render(parent, routeParams) {
+    this.__routeParams = routeParams
     this.__setDocumentTitle()
     super.__render.apply(this, [parent])
   }

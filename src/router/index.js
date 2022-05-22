@@ -7,19 +7,27 @@ class Router {
 
   get __potentialMatches() {
     return this.__routes.map(route => {
+      const pathnameMatch = location.pathname.match(route.pathRegex)
+
       return {
         route,
-        isMatch: (location.pathname === route.path),
+        isMatch:     (pathnameMatch !== null),
+        matchResult: pathnameMatch,
       }
     })
   }
 
   constructor(viewContainer, routes = []) {
-    this.__viewContainer      = viewContainer
-    this.__routes             = routes
+    this.__viewContainer  = viewContainer
+    this.__routes         = routes.map(route => ({
+                              ...route,
+                              pathRegex: this.__pathToRegex(route.path)
+                            }))
+
     this.__watchForNavigation = this.__watchForNavigation.bind(this)
     this.__navigateTo         = this.__navigateTo.bind(this)
     this.__matchCurrentRoute  = this.__matchCurrentRoute.bind(this)
+
     this.__watchForNavigation()
 
     return new Proxy(this, {
@@ -38,6 +46,14 @@ class Router {
 
   static create(viewContainer, routes) {
     return new Router(viewContainer, routes)
+  }
+
+  __pathToRegex(path) {
+    const pathRegexString = `^${
+      path.replace(/\//g, '\\/').replace(/:(\w+)/g, '(?<$1>.+)')
+    }$`
+
+    return new RegExp(pathRegexString)
   }
 
   __watchForNavigation() {
@@ -72,7 +88,10 @@ class Router {
 
     console.log('current route match:', match)
     this.__currentRoute = match.route
-    this.__currentRoute.view.render(this.__viewContainer)
+    this.__currentRoute.view.render(
+      this.__viewContainer,
+      match.matchResult?.groups,
+    )
   }
 }
 
