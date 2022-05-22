@@ -24,10 +24,6 @@ class Router {
                               pathRegex: this.__pathToRegex(route.path)
                             }))
 
-    this.__watchForNavigation = this.__watchForNavigation.bind(this)
-    this.__navigateTo         = this.__navigateTo.bind(this)
-    this.__matchCurrentRoute  = this.__matchCurrentRoute.bind(this)
-
     this.__watchForNavigation()
 
     return new Proxy(this, {

@@ -20,7 +20,7 @@ class MapCreationView extends View {
     `
   }
 
-  __htmlTemplate(context) {
+  __htmlTemplate() {
     return `
       <h1>Map Creation</h1>
       <fieldset>

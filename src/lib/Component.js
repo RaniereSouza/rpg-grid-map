@@ -1,9 +1,5 @@
 class Component {
   constructor() {
-    this.__style        = this.__style.bind(this)
-    this.__htmlTemplate = this.__htmlTemplate.bind(this)
-    this.__render       = this.__render.bind(this)
-
     return new Proxy(this, {
       get: (target, key) => {
         const keyString   = String(key)
