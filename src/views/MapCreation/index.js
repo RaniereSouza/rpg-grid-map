@@ -14,10 +14,9 @@ class MapCreationView extends View {
       }
 
       body {
-        display:          inline-block;
-        width:            100vw;
-        height:           100vh;
-        background-color: #30383f;
+        display: inline-block;
+        width:   100vw;
+        height:  100vh;
       }
 
       h1 {
@@ -47,12 +46,13 @@ class MapCreationView extends View {
       }
 
       canvas {
-        position: absolute;
-        top:      0;
-        left:     0;
-        width:    100vw;
-        height:   100vh;
-        z-index:  10;
+        position:         absolute;
+        top:              0;
+        left:             0;
+        width:            100vw;
+        height:           100vh;
+        z-index:          10;
+        background-color: #30383f;
       }
     `
   }
