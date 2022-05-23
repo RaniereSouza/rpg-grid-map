@@ -21,6 +21,8 @@ class Component {
     return `<></>`
   }
 
+  __afterRender() { }
+
   __render(parent) {
     parent.innerHTML = `
       <style>
@@ -28,6 +30,7 @@ class Component {
       </style>
       ${this.__htmlTemplate(this)}
     `
+    this.__afterRender()
   }
 }
 

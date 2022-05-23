@@ -74,6 +74,10 @@ class MapCreationView extends View {
       <canvas id="map-creation-canvas"></canvas>
     `
   }
+
+  __afterRender() {
+    console.log('canvas:', document.querySelector('#map-creation-canvas'))
+  }
 }
 
 export default MapCreationView

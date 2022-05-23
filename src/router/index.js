@@ -82,7 +82,6 @@ class Router {
       isMatch: true,
     }
 
-    console.log('current route match:', match)
     this.__currentRoute = match.route
     this.__currentRoute.view.render(
       this.__viewContainer,
