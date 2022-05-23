@@ -9,13 +9,50 @@ class MapCreationView extends View {
 
   __style() {
     return `
+      * {
+        z-index: 20;
+      }
+
+      body {
+        display:          inline-block;
+        width:            100vw;
+        height:           100vh;
+        background-color: #30383f;
+      }
+
       h1 {
+        margin:    0;
+        padding:   1.25rem 0;
         animation: fade-in 1.5s linear;
+        color:     #fff;
       }
 
       fieldset {
-        margin:    0 auto;
-        max-width: fit-content;
+        margin:                     0 auto;
+        max-width:                  fit-content;
+        border:                     none;
+        padding:                    0 .75rem .625rem;
+        background-color:           #fff;
+        border-bottom-left-radius:  .25rem;
+        border-bottom-right-radius: .25rem;
+      }
+
+      legend {
+        margin-left:             -0.75rem;
+        width:                   calc(100% + 1.5rem);
+        padding:                 .625rem .75rem;
+        background-color:        #fff;
+        border-top-left-radius:  .25rem;
+        border-top-right-radius: .25rem;
+      }
+
+      canvas {
+        position: absolute;
+        top:      0;
+        left:     0;
+        width:    100vw;
+        height:   100vh;
+        z-index:  10;
       }
     `
   }
@@ -34,6 +71,7 @@ class MapCreationView extends View {
 
         <button data-testid="map-creation-confirm-button">Create</button>
       </fieldset>
+      <canvas id="map-creation-canvas"></canvas>
     `
   }
 }
