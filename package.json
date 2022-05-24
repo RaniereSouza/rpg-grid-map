@@ -18,5 +18,8 @@
   },
   "cypress-cucumber-preprocessor": {
     "step_definitions": "cypress/support/steps"
+  },
+  "dependencies": {
+    "three": "^0.140.2"
   }
 }
