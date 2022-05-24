@@ -1,5 +1,7 @@
 import View from '../../lib/View'
 
+import ThreeJSContext from '../../lib/ThreeJSContext'
+
 class MapCreationView extends View {
   __title = 'Map Creation'
   
@@ -76,7 +78,7 @@ class MapCreationView extends View {
   }
 
   __afterRender() {
-    console.log('canvas:', document.querySelector('#map-creation-canvas'))
+    console.log(ThreeJSContext.create('#map-creation-canvas', {}))
   }
 }
 
