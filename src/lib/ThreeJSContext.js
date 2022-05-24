@@ -34,7 +34,8 @@ class ThreeJSContext {
     lightsOptions   = [...defaultLightsOptions,   ...lightsOptions]
     rendererOptions = {...defaultRendererOptions, ...rendererOptions}
 
-    this.__scene  = new THREE.Scene()
+    this.__scene = new THREE.Scene()
+    this.__scene.background = new THREE.Color(0x30383F)
 
     this.__lights = lightsOptions.map(lightOptions => {
       const light = new THREE[lightOptions.type](lightOptions.color)

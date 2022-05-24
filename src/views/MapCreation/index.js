@@ -78,7 +78,7 @@ class MapCreationView extends View {
   }
 
   __afterRender() {
-    console.log(ThreeJSContext.create('#map-creation-canvas', {}))
+    ThreeJSContext.create('#map-creation-canvas', {})
   }
 }
 
