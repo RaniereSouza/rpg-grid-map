@@ -1,6 +1,6 @@
 import View from '../../lib/View'
 
-import ThreeJSContext from '../../lib/ThreeJSContext'
+import GridMap from '../../lib/GridMap'
 
 class MapCreationView extends View {
   __title = 'Map Creation'
@@ -78,7 +78,7 @@ class MapCreationView extends View {
   }
 
   __afterRender() {
-    ThreeJSContext.create('#map-creation-canvas', {})
+    this.__gridMap = GridMap.create('#map-creation-canvas')
   }
 }
 

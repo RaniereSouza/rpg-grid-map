@@ -54,7 +54,9 @@ class ThreeJSContext {
     this.__renderer.setSize(rendererOptions.width, rendererOptions.height)
     this.__renderer.render(this.__scene, this.__camera)
 
-    this.__demo() 
+    this.__demo()
+
+    return new Proxy(this, {})
   }
 
   __demo() {
@@ -86,8 +88,8 @@ class ThreeJSContext {
     animate()
   }
 
-  static create(selector, options) {
-    const canvas = document.querySelector(selector)
+  static create(canvasSelector, options) {
+    const canvas = document.querySelector(canvasSelector)
     return new ThreeJSContext(canvas, options)
   }
 }
