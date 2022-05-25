@@ -73,7 +73,7 @@ class MapCreationView extends View {
 
         <button data-testid="map-creation-confirm-button">Create</button>
       </fieldset>
-      <canvas id="map-creation-canvas"></canvas>
+      <canvas id="map-creation-canvas" data-testid="map-creation-canvas"></canvas>
     `
   }
 

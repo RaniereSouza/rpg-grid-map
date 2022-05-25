@@ -10,6 +10,10 @@ class MapCreationElements {
   get confirmCreationButton() {
     return cy.get('[data-testid="map-creation-confirm-button"]')
   }
+
+  get gridMapCanvas() {
+    return cy.get('[data-testid="map-creation-canvas"]')
+  }
 }
 
 export default new MapCreationElements()

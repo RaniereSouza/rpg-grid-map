@@ -18,3 +18,7 @@ Given(
 When('I confirm the grid map creation', () => {
   mapCreationPage.confirmGridCreation()
 })
+
+Then('I should see a {int} by {int} blank grid map', (width, height) => {
+  mapCreationPage.assertGridMapSize(width, height)
+})
