@@ -13,6 +13,11 @@ class GridMap {
   static create(canvasSelector) {
     return new GridMap(canvasSelector)
   }
+
+  initBlankGrid(width, height) {
+    this.__grid = GridMap.__threeJSContext.createGridObject(width, height)
+    console.log('grid:', this.__grid)
+  }
 }
 
 export default GridMap

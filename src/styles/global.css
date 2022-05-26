@@ -17,15 +17,15 @@ body {
 
 @keyframes fade-in {
   0%   {
-    margin-left: -48px;
-    opacity:     0;
+    left:    -48px;
+    opacity: 0;
   }
   33.33% {
-    margin-left: -48px;
-    opacity:     0;
+    left:    -48px;
+    opacity: 0;
   }
   100% {
-    margin-left: 0;
-    opacity:     1;
+    left:    0;
+    opacity: 1;
   }
 }

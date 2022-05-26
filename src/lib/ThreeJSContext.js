@@ -1,15 +1,6 @@
 import * as THREE from 'three'
 
-export const defaultCameraOptions = {
-  type:             'PerspectiveCamera',
-  initialZDistance: 30,
-  config: {
-    fieldOfView: 75,
-    ratio:       window.innerWidth / window.innerHeight,
-    near:        0.1,
-    far:         1000,
-  },
-}
+export const defaultSceneBgColor = 0x30383F
 
 export const defaultLightsOptions = [{
   type:             'PointLight',
@@ -18,10 +9,28 @@ export const defaultLightsOptions = [{
   initialZDistance: 60,
 }]
 
+export const defaultCameraOptions = {
+  type:             'PerspectiveCamera',
+  initialZDistance: 27.5,
+  config: {
+    fieldOfView: 75,
+    ratio:       window.innerWidth / window.innerHeight,
+    near:        0.1,
+    far:         1000,
+  },
+}
+
 export const defaultRendererOptions = {
   pixelRatio: window.devicePixelRatio,
   width:      window.innerWidth,
   height:     window.innerHeight,
+}
+
+export const defaultGridOptions = {
+  bgColor:           0xFFFFFF,
+  squareFillColor:   0xF0F8FF,
+  squareBorderColor: 0x000000,
+  gridLift:          0.125, // distance between the background and the squares
 }
 
 class ThreeJSContext {
@@ -35,7 +44,10 @@ class ThreeJSContext {
     rendererOptions = {...defaultRendererOptions, ...rendererOptions}
 
     this.__scene = new THREE.Scene()
-    this.__scene.background = new THREE.Color(0x30383F)
+    this.__scene.background = new THREE.Color(defaultSceneBgColor)
+
+    const axesHelper = new THREE.AxesHelper(100)
+    this.__scene.add(axesHelper)
 
     this.__lights = lightsOptions.map(lightOptions => {
       const light = new THREE[lightOptions.type](lightOptions.color)
@@ -54,43 +66,71 @@ class ThreeJSContext {
     this.__renderer.setSize(rendererOptions.width, rendererOptions.height)
     this.__renderer.render(this.__scene, this.__camera)
 
-    this.__demo()
+    this.__animateScene()
 
     return new Proxy(this, {})
-  }
-
-  __demo() {
-    const torusGeometry = new THREE.TorusGeometry(16, 3, 16, 100)
-    const torusMaterial = new THREE.MeshStandardMaterial({color: 0xFF6347})
-    const torus         = new THREE.Mesh(torusGeometry, torusMaterial)
-
-    const cubeGeometry = new THREE.BoxGeometry(10, 10, 10)
-    const cubeMaterial = new THREE.MeshStandardMaterial({color: 0x66FFCC})
-    const cube         = new THREE.Mesh(cubeGeometry, cubeMaterial)
-
-    this.__scene.add(torus)
-    this.__scene.add(cube)
-    
-    const animate = () => {
-      this.__renderer.render(this.__scene, this.__camera)
-
-      torus.rotation.x += 0.01
-      torus.rotation.y += 0.005
-      torus.rotation.z += 0.01
-
-      cube.rotation.x -= 0.04
-      cube.rotation.y -= 0.02
-      cube.rotation.z -= 0.04
-
-      requestAnimationFrame(animate)
-    }
-
-    animate()
   }
 
   static create(canvasSelector, options) {
     const canvas = document.querySelector(canvasSelector)
     return new ThreeJSContext(canvas, options)
+  }
+
+  __animateScene() {
+    this.__renderer.render(this.__scene, this.__camera)
+    requestAnimationFrame(this.__animateScene.bind(this))
+  }
+
+  createGridObject(width, height) {
+    const {
+      bgColor, squareFillColor,
+      squareBorderColor, gridLift,
+    } = defaultGridOptions
+
+    const backgroundGeometry = new THREE.PlaneGeometry(width, height, 1, 1)
+    const backgroundMaterial = new THREE.MeshBasicMaterial({color: bgColor})
+    const background         = new THREE.Mesh(backgroundGeometry, backgroundMaterial)
+
+    const squareGeometry = new THREE.PlaneGeometry(1, 1, 1, 1)
+    const squareMaterial = new THREE.MeshBasicMaterial({color: squareFillColor})
+    const square         = new THREE.Mesh(squareGeometry, squareMaterial)
+
+    const edgesGeometry = new THREE.EdgesGeometry(square.geometry)
+    const border        = new THREE.LineSegments(
+      edgesGeometry, new THREE.LineBasicMaterial({color: squareBorderColor}),
+    )
+    square.add(border)
+
+    let squares = []
+    let row     = 0
+    let column  = 0
+    for (let positionX = -(width / 2) + 0.5; positionX < (width / 2); positionX++) {
+      row++
+
+      for (let positionY = -(height / 2) + 0.5; positionY < (height / 2); positionY++) {
+        column++
+
+        const squareCopy       = square.clone()
+        const squareCopyBorder = squareCopy.children[0]
+
+        squareCopy.position.setX(positionX)
+        squareCopy.position.setY(positionY)
+        squareCopy.position.setZ(gridLift)
+
+        background.add(squareCopy)
+
+        squares.push({
+          row,
+          column,
+          fill:   squareCopy,
+          border: squareCopyBorder,
+        })
+      }
+    }
+
+    this.__scene.add(background)
+
+    return {width, height, background, squares}
   }
 }
 
