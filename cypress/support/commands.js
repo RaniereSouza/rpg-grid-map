@@ -24,6 +24,8 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
+import 'cypress-plugin-snapshots/commands'
+
 Cypress.Commands.overwrite('visit', (originalFn, urlSuffix, options) => {
   const url = `${Cypress.env('BASE_URL')}${urlSuffix}`
   return originalFn({url, ...options})

@@ -19,8 +19,9 @@
   // `config` is the resolved Cypress config
 } */
 
-const { loadEnv }          = require('vite')
-const { default:cucumber } = require('cypress-cucumber-preprocessor')
+const { loadEnv }              = require('vite')
+const { default:cucumber }     = require('cypress-cucumber-preprocessor')
+const { initPlugin:snapshots } = require('cypress-plugin-snapshots/plugin')
 /**
  * @type {Cypress.PluginConfig}
  */
@@ -30,6 +31,8 @@ module.exports = (on, config) => {
   config.env = {...config.env, ...loadEnv('test', process.cwd(), '')}
   if (!config.env.BASE_URL)
     config.env.BASE_URL = `http://localhost:${config.env.PORT || 3000}`
+
+  snapshots(on, config)
 
   return config
 }

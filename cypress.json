@@ -1,5 +1,16 @@
 {
   "viewportWidth": 1336,
   "viewportHeight": 768,
-  "testFiles": "**/*.{feature,features}"
+  "testFiles": "**/*.{feature,features}",
+  "ignoreTestFiles": [
+    "**/__snapshots__/*",
+    "**/__image_snapshots__/*"
+  ],
+  "env": {
+    "cypress-plugin-snapshots": {
+      "imageConfig": {
+        "threshold": 0.01
+      }
+    }
+  }
 }
