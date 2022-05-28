@@ -29,3 +29,19 @@ body {
     opacity: 1;
   }
 }
+
+@keyframes fade-out {
+  0%   {
+    left:    0;
+    opacity: 1;
+  }
+  50% {
+    left:    48px;
+    opacity: 0;
+  }
+  100% {
+    left:    48px;
+    opacity: 0;
+    z-index: -1;
+  }
+}

@@ -37,6 +37,10 @@ class MapCreationView extends View {
         border-radius:    .25rem;
       }
 
+      #map-creation-form.hidden {
+        animation: fade-out 2s linear 0s 1 normal forwards;
+      }
+
       #map-creation-form fieldset {
         border:  none;
         padding: 0 .75rem .625rem;
@@ -90,6 +94,7 @@ class MapCreationView extends View {
         const height = Number(document.querySelector('#map-creation-height').value)
 
         this.__gridMap.initBlankGrid(width, height)
+        document.querySelector('#map-creation-form').classList.add('hidden')
       }
     )
   }
