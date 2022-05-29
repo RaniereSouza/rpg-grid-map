@@ -13,16 +13,10 @@ class MapCreationPage {
     mapCreationElements.confirmCreationButton.click()
   }
 
-  doesGridMapExist() {
-    const canvas = mapCreationElements.gridMapCanvas
-    throw 'No implementation yet for doesGridMapExist()'
-  }
-
-  assertGridMapSize(width, height) {
-    if (this.doesGridMapExist()) {
-      const canvas = mapCreationElements.gridMapCanvas
-      throw 'No implementation yet for assertGridMapSize()'
-    }
+  doesGridMapExist(width, height) {
+    mapCreationElements.gridMapCanvas.toMatchImageSnapshot({
+      name: `map-creation-new-grid-${width}x${height}`
+    })
   }
 }
 
