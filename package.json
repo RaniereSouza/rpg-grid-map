@@ -14,7 +14,7 @@
     "concurrently": "^7.1.0",
     "cypress": "^9.6.1",
     "cypress-cucumber-preprocessor": "^4.3.1",
-    "cypress-plugin-snapshots": "^1.4.4",
+    "cypress-image-diff-js": "^1.19.2",
     "vite": "^2.9.7"
   },
   "cypress-cucumber-preprocessor": {

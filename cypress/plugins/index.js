@@ -19,9 +19,9 @@
   // `config` is the resolved Cypress config
 } */
 
-const { loadEnv }              = require('vite')
-const { default:cucumber }     = require('cypress-cucumber-preprocessor')
-const { initPlugin:snapshots } = require('cypress-plugin-snapshots/plugin')
+const { loadEnv }          = require('vite')
+const { default:cucumber } = require('cypress-cucumber-preprocessor')
+const snapshots            = require('cypress-image-diff-js/dist/plugin')
 /**
  * @type {Cypress.PluginConfig}
  */
