@@ -14,9 +14,9 @@ class MapCreationPage {
   }
 
   doesGridMapExist(width, height) {
-    mapCreationElements.gridMapCanvas.toMatchImageSnapshot({
-      name: `map-creation-new-grid-${width}x${height}`
-    })
+    mapCreationElements.gridMapCanvas.visualTest(
+      `map-creation-blank-grid-${width}x${height}`,
+    )
   }
 }
 

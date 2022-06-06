@@ -30,3 +30,15 @@ Cypress.Commands.overwrite('visit', (originalFn, urlSuffix, options) => {
   const url = `${Cypress.env('BASE_URL')}${urlSuffix}`
   return originalFn({url, ...options})
 })
+
+Cypress.Commands.add('visualTest', {prevSubject: true}, (subject, snapshotName) => {
+  const snapshotSuffix = `--${
+    Cypress.browser.displayName
+  }-${
+    Cypress.config('viewportWidth')}x${Cypress.config('viewportHeight')
+  }`
+
+  return cy.wrap(subject).toMatchImageSnapshot({
+    name: `${snapshotName}${snapshotSuffix}`,
+  })
+})
