@@ -13,9 +13,6 @@ dist
 dist-ssr
 cypress/downloads
 cypress/screenshots
-cypress-visual-report
-cypress-visual-screenshots/*
-!cypress-visual-screenshots/baseline
 
 # Reference files with potentially sensitive data
 *.local
