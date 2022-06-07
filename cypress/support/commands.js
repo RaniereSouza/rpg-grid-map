@@ -37,8 +37,9 @@ Cypress.Commands.add('visualTest', {prevSubject: true}, (subject, snapshotName) 
   }-${
     Cypress.config('viewportWidth')}x${Cypress.config('viewportHeight')
   }`
+  const snapshotCompleteName = `${snapshotName}${snapshotSuffix}`
 
   return cy.wrap(subject).toMatchImageSnapshot({
-    name: `${snapshotName}${snapshotSuffix}`,
+    name: snapshotCompleteName
   })
 })
