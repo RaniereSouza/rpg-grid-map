@@ -33,8 +33,6 @@ Cypress.Commands.overwrite('visit', (originalFn, urlSuffix, options) => {
 
 Cypress.Commands.add('visualTest', {prevSubject: true}, (subject, snapshotName) => {
   const snapshotSuffix = `--${
-    Cypress.browser.displayName
-  }-${
     Cypress.config('viewportWidth')}x${Cypress.config('viewportHeight')
   }`
   const snapshotCompleteName = `${snapshotName}${snapshotSuffix}`
