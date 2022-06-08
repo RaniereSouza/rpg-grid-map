@@ -67,7 +67,7 @@ class MapCreationView extends View {
   __htmlTemplate() {
     return `
       <h1>Map Creation</h1>
-      <div id="map-creation-form">
+      <div id="map-creation-form" data-testid="map-creation-form">
         <fieldset>
           <legend>What dimensions do you want for your grid?</legend>
 

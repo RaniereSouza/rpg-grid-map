@@ -14,9 +14,11 @@ class MapCreationPage {
   }
 
   doesGridMapExist(width, height) {
-    mapCreationElements.gridMapCanvas.visualTest(
-      `map-creation-blank-grid-${width}x${height}`,
-    )
+    mapCreationElements.mapCreationForm.should('not.be.visible').then(() => {
+      mapCreationElements.gridMapCanvas.visualTest(
+        `map-creation-blank-grid-${width}x${height}`,
+      )
+    })
   }
 }
 

@@ -38,6 +38,7 @@ Cypress.Commands.add('visualTest', {prevSubject: true}, (subject, snapshotName) 
   const snapshotCompleteName = `${snapshotName}${snapshotSuffix}`
 
   return cy.wrap(subject).toMatchImageSnapshot({
-    name: snapshotCompleteName
+    name:                       snapshotCompleteName,
+    disableTimersAndAnimations: false,
   })
 })

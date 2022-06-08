@@ -1,4 +1,8 @@
 class MapCreationElements {
+  get mapCreationForm() {
+    return cy.get('[data-testid="map-creation-form"]')
+  }
+
   get widthInput() {
     return cy.get('[data-testid="map-creation-width-input"]')
   }
