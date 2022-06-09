@@ -8,7 +8,7 @@
     "preview": "vite preview",
     "cy:open": "cypress open",
     "serve:test": "concurrently \"npm:build -- --watch\" \"npm:preview -- --config vite.test-config.js\"",
-    "test:open": "concurrently --kill-others \"npm:serve:test\" \"npm:cy:open\""
+    "test:e2e": "concurrently --kill-others \"npm:serve:test\" \"npm:cy:open\""
   },
   "devDependencies": {
     "concurrently": "^7.1.0",
