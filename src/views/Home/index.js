@@ -8,7 +8,7 @@ class HomeView extends View {
   }
 
   __style() {
-    return `
+    return /* css */`
       h1 {
         animation: fade-in 1.5s linear;
       }
@@ -21,7 +21,7 @@ class HomeView extends View {
   }
 
   __htmlTemplate() {
-    return `
+    return /* html */`
       <h1 data-testid="home-title">Hello, adventurer!</h1>
       <div>
         <p>What do you want to do?</p>

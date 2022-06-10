@@ -10,7 +10,7 @@ class MapCreationView extends View {
   }
 
   __style() {
-    return `
+    return /* css */`
       * {
         z-index: 20;
       }
@@ -65,7 +65,7 @@ class MapCreationView extends View {
   }
 
   __htmlTemplate() {
-    return `
+    return /* html */`
       <h1>Map Creation</h1>
       <div id="map-creation-form" data-testid="map-creation-form">
         <fieldset>
@@ -86,6 +86,7 @@ class MapCreationView extends View {
 
   __afterRender() {
     this.__gridMap = GridMap.create('#map-creation-canvas')
+
     document.querySelector('#map-creation-confirm-button').addEventListener('click',
       event => {
         event.preventDefault()
