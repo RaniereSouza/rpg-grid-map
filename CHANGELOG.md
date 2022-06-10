@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+### Added
+- Basic SPA routing
+- Map creation view
+- Canvas manipulation with Three.js
+- Blank grid creation
+- Visual Regression Testing on Cypress
+### Changed
+- Better naming for some NPM scripts
+
 ## [0.0.1] - 2022-05-19
 ### Fixed
 - Now the tests run based on the project's production build instead of the dev server

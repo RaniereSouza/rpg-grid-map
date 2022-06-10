@@ -4,7 +4,7 @@ import GridMap from '../../lib/GridMap'
 
 class MapCreationView extends View {
   __title = 'Map Creation'
-  
+
   constructor() {
     super()
   }
