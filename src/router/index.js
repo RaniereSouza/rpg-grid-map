@@ -60,7 +60,7 @@ class Router {
           this.__navigateTo(event.target.getAttribute('href'))
         }
       })
-      
+
       this.__matchCurrentRoute()
     })
 

@@ -60,7 +60,7 @@ class ThreeJSContext {
 
     this.__camera = new THREE[cameraOptions.type](...Object.values(cameraOptions.config))
     this.__camera.position.setZ(cameraOptions.initialZDistance)
-    
+
     this.__renderer = new THREE.WebGLRenderer({canvas})
     this.__renderer.setPixelRatio(rendererOptions.pixelRatio)
     this.__renderer.setSize(rendererOptions.width, rendererOptions.height)

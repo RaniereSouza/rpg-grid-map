@@ -17,7 +17,7 @@ class MapCreationView extends View {
 
       body {
         display: inline-block;
-        width:   100vw;
+        width:   calc(100vw - (100vw - 100%));
         height:  100vh;
       }
 
@@ -35,10 +35,17 @@ class MapCreationView extends View {
         box-shadow:       1px 4px 16px 1px #000;
         background-color: #fff;
         border-radius:    .25rem;
+        opacity:          1;
+        left:             0;
+        transition:       opacity 1s linear,
+                          left 1s linear,
+                          z-index 0s linear 1s;
       }
 
       #map-creation-form.hidden {
-        animation: fade-out 2s linear 0s 1 normal forwards;
+        opacity: 0;
+        left:    48px;
+        z-index: -1;
       }
 
       #map-creation-form fieldset {
@@ -56,8 +63,8 @@ class MapCreationView extends View {
         position:         absolute;
         top:              0;
         left:             0;
-        width:            100vw;
-        height:           100vh;
+        width:            calc(100vw - (100vw - 100%)) !important;
+        height:           100vh !important;
         z-index:          10;
         background-color: #30383f;
       }
