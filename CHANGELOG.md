@@ -6,10 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 ### Added
+- Rudimentary App, Component and View classes
 - Basic SPA routing
 - Map creation view
 - Canvas manipulation with Three.js
-- Blank grid creation
+- Blank grid creation minimal functionality
 - Visual Regression Testing on Cypress
 ### Changed
 - Better naming for some NPM scripts
