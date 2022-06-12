@@ -20,5 +20,5 @@ When('I confirm the grid map creation', () => {
 })
 
 Then('I should see a {int} by {int} blank grid map', (width, height) => {
-  mapCreationPage.doesGridMapExist(width, height)
+  mapCreationPage.hasNewBlankGridMap(width, height)
 })

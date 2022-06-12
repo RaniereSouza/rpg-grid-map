@@ -1,4 +1,5 @@
-import * as THREE from 'three'
+import * as THREE        from 'three'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
 export const defaultSceneBgColor = 0x30383F
 
@@ -64,7 +65,8 @@ class ThreeJSContext {
     this.__renderer = new THREE.WebGLRenderer({canvas})
     this.__renderer.setPixelRatio(rendererOptions.pixelRatio)
     this.__renderer.setSize(rendererOptions.width, rendererOptions.height)
-    this.__renderer.render(this.__scene, this.__camera)
+
+    this.__controls = new OrbitControls(this.__camera, this.__renderer.domElement)
 
     this.__animateScene()
 
@@ -78,6 +80,7 @@ class ThreeJSContext {
 
   __animateScene() {
     this.__renderer.render(this.__scene, this.__camera)
+    this.__controls.update()
     requestAnimationFrame(this.__animateScene.bind(this))
   }
 

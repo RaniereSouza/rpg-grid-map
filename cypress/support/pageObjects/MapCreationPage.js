@@ -13,7 +13,7 @@ class MapCreationPage {
     mapCreationElements.confirmCreationButton.click()
   }
 
-  doesGridMapExist(width, height) {
+  hasNewBlankGridMap(width, height) {
     mapCreationElements.mapCreationForm.should('not.be.visible')
     mapCreationElements.gridMapCanvas.visualTest(
       `map-creation-blank-grid-${width}x${height}`,
