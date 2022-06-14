@@ -16,9 +16,9 @@ class MapCreationView extends View {
       }
 
       body {
-        display: inline-block;
-        width:   calc(100vw - (100vw - 100%));
-        height:  100vh;
+        display:  inline-block;
+        width:    100vw;
+        height:   100vh;
       }
 
       h1 {
@@ -63,8 +63,8 @@ class MapCreationView extends View {
         position:         absolute;
         top:              0;
         left:             0;
-        width:            calc(100vw - (100vw - 100%)) !important;
-        height:           100vh !important;
+        width:            100vw;
+        height:           100vh;
         z-index:          10;
         background-color: #30383f;
       }
