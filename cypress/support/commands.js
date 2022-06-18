@@ -24,21 +24,22 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
-import 'cypress-plugin-snapshots/commands'
+import '@applitools/eyes-cypress/commands'
 
 Cypress.Commands.overwrite('visit', (originalFn, urlSuffix, options) => {
   const url = `${Cypress.env('BASE_URL')}${urlSuffix}`
   return originalFn({url, ...options})
 })
 
-Cypress.Commands.add('visualTest', {prevSubject: true}, (subject, snapshotName) => {
+Cypress.Commands.add('visualTest', {prevSubject: true}, ($subject, snapshotName) => {
   const snapshotSuffix = `--${
     Cypress.config('viewportWidth')}x${Cypress.config('viewportHeight')
   }`
   const snapshotCompleteName = `${snapshotName}${snapshotSuffix}`
 
-  return cy.wrap(subject).toMatchImageSnapshot({
-    name:                       snapshotCompleteName,
-    disableTimersAndAnimations: false,
+  cy.eyesOpen({
+    appName: 'rpg-grid-map',
   })
+  cy.eyesCheckWindow(snapshotCompleteName)
+  cy.eyesClose()
 })

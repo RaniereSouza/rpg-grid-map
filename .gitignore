@@ -13,8 +13,6 @@ dist
 dist-ssr
 cypress/downloads
 cypress/screenshots
-cypress/**/__image_snapshots__/*.diff.*
-cypress/**/__image_snapshots__/*.actual.*
 
 # Reference files with potentially sensitive data
 *.local
