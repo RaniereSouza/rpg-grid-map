@@ -1,7 +1,7 @@
 class App {
   constructor(root, { router }) {
     this.__root   = root
-    this.__router = router.ctor(this.__root, router.routes)
+    this.__router = router(this.__root)
     return new Proxy(this, {})
   }
 

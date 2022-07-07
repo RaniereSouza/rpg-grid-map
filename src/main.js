@@ -1,9 +1,10 @@
 import App from './App'
 
-import Router, { routes } from './router'
+import Router from './router'
+import routes from './router/routes'
 
 import './styles/global.css'
 
 App.create('#app', {
-  router: {routes, ctor: Router.create}
+  router: (viewContainer) => Router.create(viewContainer, routes),
 })

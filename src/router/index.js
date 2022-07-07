@@ -1,7 +1,3 @@
-import routesList from './routes'
-
-export const routes = routesList
-
 class Router {
   __currentRoute = {}
 
@@ -83,9 +79,13 @@ class Router {
     }
 
     this.__currentRoute = match.route
+    this.__renderCurrentView(match.matchResult?.groups)
+  }
+
+  __renderCurrentView(routeParams) {
     this.__currentRoute.view.render(
       this.__viewContainer,
-      match.matchResult?.groups,
+      routeParams,
     )
   }
 }
