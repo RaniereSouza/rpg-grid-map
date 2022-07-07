@@ -22,9 +22,10 @@ export const defaultCameraOptions = {
 }
 
 export const defaultRendererOptions = {
-  pixelRatio: window.devicePixelRatio,
-  width:      window.innerWidth,
-  height:     window.innerHeight,
+  pixelRatio:            window.devicePixelRatio,
+  width:                 window.innerWidth,
+  height:                window.innerHeight,
+  preserveDrawingBuffer: true,
 }
 
 export const defaultGridOptions = {
@@ -62,7 +63,10 @@ class ThreeJSContext {
     this.__camera = new THREE[cameraOptions.type](...Object.values(cameraOptions.config))
     this.__camera.position.setZ(cameraOptions.initialZDistance)
 
-    this.__renderer = new THREE.WebGLRenderer({canvas})
+    this.__renderer = new THREE.WebGLRenderer({
+      canvas,
+      preserveDrawingBuffer: rendererOptions.preserveDrawingBuffer,
+    })
     this.__renderer.setPixelRatio(rendererOptions.pixelRatio)
     this.__renderer.setSize(rendererOptions.width, rendererOptions.height)
 

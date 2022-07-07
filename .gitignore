@@ -19,6 +19,7 @@ cypress/screenshots
 .env*
 !.env.example
 !.env.test
+drafts
 
 # Editor directories and files
 .vscode/*
