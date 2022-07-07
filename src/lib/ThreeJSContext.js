@@ -45,32 +45,11 @@ class ThreeJSContext {
     lightsOptions   = [...defaultLightsOptions,   ...lightsOptions]
     rendererOptions = {...defaultRendererOptions, ...rendererOptions}
 
-    this.__scene = new THREE.Scene()
-    this.__scene.background = new THREE.Color(defaultSceneBgColor)
-
-    const axesHelper = new THREE.AxesHelper(100)
-    this.__scene.add(axesHelper)
-
-    this.__lights = lightsOptions.map(lightOptions => {
-      const light = new THREE[lightOptions.type](lightOptions.color)
-      light.position.setY(lightOptions.initialYDistance)
-      light.position.setZ(lightOptions.initialZDistance)
-
-      this.__scene.add(light)
-      return light
-    })
-
-    this.__camera = new THREE[cameraOptions.type](...Object.values(cameraOptions.config))
-    this.__camera.position.setZ(cameraOptions.initialZDistance)
-
-    this.__renderer = new THREE.WebGLRenderer({
-      canvas,
-      preserveDrawingBuffer: rendererOptions.preserveDrawingBuffer,
-    })
-    this.__renderer.setPixelRatio(rendererOptions.pixelRatio)
-    this.__renderer.setSize(rendererOptions.width, rendererOptions.height)
-
-    this.__controls = new OrbitControls(this.__camera, this.__renderer.domElement)
+    this.__initScene({defaultSceneBgColor})
+    this.__initLights(lightsOptions)
+    this.__initCamera(cameraOptions)
+    this.__initRenderer({...rendererOptions, canvas})
+    this.__initHelpers()
 
     this.__animateScene()
 
@@ -82,9 +61,48 @@ class ThreeJSContext {
     return new ThreeJSContext(canvas, options)
   }
 
+  __initScene(sceneOptions) {
+    this.__scene = new THREE.Scene()
+    this.__scene.background = new THREE.Color(sceneOptions.defaultSceneBgColor)
+  }
+
+  __initLights(lightsOptions) {
+    this.__lights = lightsOptions.map(lightOptions => {
+      const light = new THREE[lightOptions.type](lightOptions.color)
+      light.position.setY(lightOptions.initialYDistance)
+      light.position.setZ(lightOptions.initialZDistance)
+
+      this.__scene.add(light)
+      return light
+    })
+  }
+
+  __initCamera(cameraOptions) {
+    this.__camera = new THREE[cameraOptions.type](...Object.values(cameraOptions.config))
+    this.__camera.position.setZ(cameraOptions.initialZDistance)
+  }
+
+  __initRenderer(rendererOptions) {
+    this.__renderer = new THREE.WebGLRenderer({
+      canvas:                rendererOptions.canvas,
+      preserveDrawingBuffer: rendererOptions.preserveDrawingBuffer,
+    })
+    this.__renderer.setPixelRatio(rendererOptions.pixelRatio)
+    this.__renderer.setSize(rendererOptions.width, rendererOptions.height)
+  }
+
+  __initHelpers() {
+    this.__helpers = {}
+
+    this.__helpers.axes = new THREE.AxesHelper(100)
+    this.__scene.add(this.__helpers.axes)
+
+    this.__helpers.controls = new OrbitControls(this.__camera, this.__renderer.domElement)
+  }
+
   __animateScene() {
     this.__renderer.render(this.__scene, this.__camera)
-    this.__controls.update()
+    this.__helpers.controls.update()
     requestAnimationFrame(this.__animateScene.bind(this))
   }
 
@@ -94,19 +112,37 @@ class ThreeJSContext {
       squareBorderColor, gridLift,
     } = defaultGridOptions
 
-    const backgroundGeometry = new THREE.PlaneGeometry(width, height, 1, 1)
-    const backgroundMaterial = new THREE.MeshBasicMaterial({color: bgColor})
-    const background         = new THREE.Mesh(backgroundGeometry, backgroundMaterial)
+    const background = this.__createPlaneObject({
+      geometryOptions: {width, height, widthSegments: 1, heightSegments: 1},
+      materialOptions: {color: bgColor},
+    })
 
-    const squareGeometry = new THREE.PlaneGeometry(1, 1, 1, 1)
-    const squareMaterial = new THREE.MeshBasicMaterial({color: squareFillColor})
-    const square         = new THREE.Mesh(squareGeometry, squareMaterial)
+    const square = this.__createPlaneObject({
+      geometryOptions: {width: 1, height: 1, widthSegments: 1, heightSegments: 1},
+      materialOptions: {color: squareFillColor},
+    })
 
-    const edgesGeometry = new THREE.EdgesGeometry(square.geometry)
-    const border        = new THREE.LineSegments(
-      edgesGeometry, new THREE.LineBasicMaterial({color: squareBorderColor}),
-    )
+    const border = this.__createEdgesObject({
+      geometryObject:  square.geometry,
+      materialOptions: {color: squareBorderColor},
+    })
     square.add(border)
+
+    function createGridSquareObject({ row, column, positionX, positionY }) {
+      const squareCopy       = square.clone()
+      const squareCopyBorder = squareCopy.children[0]
+
+      squareCopy.position.setX(positionX)
+      squareCopy.position.setY(positionY)
+      squareCopy.position.setZ(gridLift)
+
+      return {
+        row,
+        column,
+        fill:   squareCopy,
+        border: squareCopyBorder,
+      }
+    }
 
     let squares = []
     let row     = 0
@@ -117,27 +153,37 @@ class ThreeJSContext {
       for (let positionY = -(height / 2) + 0.5; positionY < (height / 2); positionY++) {
         column++
 
-        const squareCopy       = square.clone()
-        const squareCopyBorder = squareCopy.children[0]
-
-        squareCopy.position.setX(positionX)
-        squareCopy.position.setY(positionY)
-        squareCopy.position.setZ(gridLift)
-
-        background.add(squareCopy)
-
-        squares.push({
-          row,
-          column,
-          fill:   squareCopy,
-          border: squareCopyBorder,
+        const gridSquareObject = createGridSquareObject({
+          row, column, positionX, positionY,
         })
+
+        background.add(gridSquareObject.fill)
+        squares.push(gridSquareObject)
       }
     }
 
     this.__scene.add(background)
 
     return {width, height, background, squares}
+  }
+
+  __createPlaneObject({ geometryOptions, materialOptions }) {
+    const planeGeometry = new THREE.PlaneGeometry(
+      geometryOptions.width,
+      geometryOptions.height,
+      geometryOptions.widthSegments,
+      geometryOptions.heightSegments,
+    )
+    const planeMaterial = new THREE.MeshBasicMaterial(materialOptions)
+    return new THREE.Mesh(planeGeometry, planeMaterial)
+  }
+
+  __createEdgesObject({ geometryObject, materialOptions }) {
+    const edgesGeometry = new THREE.EdgesGeometry(geometryObject)
+    return new THREE.LineSegments(
+      edgesGeometry,
+      new THREE.LineBasicMaterial(materialOptions),
+    )
   }
 }
 
