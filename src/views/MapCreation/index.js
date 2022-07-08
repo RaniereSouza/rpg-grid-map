@@ -1,5 +1,4 @@
-import View from '../../lib/View'
-
+import View    from '../../lib/View'
 import GridMap from '../../lib/GridMap'
 
 class MapCreationView extends View {

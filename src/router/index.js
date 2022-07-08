@@ -50,17 +50,20 @@ class Router {
 
   __watchForNavigation() {
     document.addEventListener('DOMContentLoaded', () => {
-      document.body.addEventListener('click', event => {
-        if (event.target.matches('a[data-link]')) {
-          event.preventDefault()
-          this.__navigateTo(event.target.getAttribute('href'))
-        }
-      })
-
+      this.__setNavigationLinkEvents()
       this.__matchCurrentRoute()
     })
 
     window.addEventListener('popstate', this.__matchCurrentRoute)
+  }
+
+  __setNavigationLinkEvents() {
+    document.body.addEventListener('click', event => {
+      if (event.target.matches('a[data-link]')) {
+        event.preventDefault()
+        this.__navigateTo(event.target.getAttribute('href'))
+      }
+    })
   }
 
   __navigateTo(path) {
