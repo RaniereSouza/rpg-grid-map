@@ -6,7 +6,13 @@ Feature: Map creation interface
     Given I access the application
     And I choose the map creation action
 
-  Scenario: Creating a blank grid map with the chosen dimensions
-    Given I choose the dimensions 30 for width and 40 for height for my grid map
+  Scenario Outline: Creating a blank grid map with the chosen dimensions
+    Given I choose the dimensions <width> for width and <height> for height for my grid map
     When I confirm the grid map creation
-    Then I should see a 30 by 40 blank grid map
+    Then I should see a <width> by <height> blank grid map
+
+    Examples:
+      | width | height |
+      |    30 |     40 |
+      |    15 |     15 |
+      |    50 |     20 |
