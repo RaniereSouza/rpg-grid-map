@@ -11,9 +11,9 @@ export default class View extends Component {
     document.title = this.__title
   }
 
-  __render(parent, routeParams) {
+  render(parent, routeParams) {
     this.__routeParams = routeParams
     this.__setDocumentTitle()
-    super.__render.apply(this, [parent])
+    super.render.apply(this, [parent])
   }
 }

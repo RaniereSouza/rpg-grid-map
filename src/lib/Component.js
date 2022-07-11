@@ -7,7 +7,7 @@ export default class Component {
         if (!visibleKeys.includes(keyString)) return undefined
 
         if (keyString === 'render') return function() {
-          target.__render.apply(target, arguments)
+          target.render.apply(target, arguments)
         }
       }
     })
@@ -23,7 +23,7 @@ export default class Component {
 
   __afterRender() { }
 
-  __render(parent) {
+  render(parent) {
     parent.innerHTML = `
       <style>
         ${this.__style(this)}
