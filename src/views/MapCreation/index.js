@@ -1,7 +1,7 @@
 import View    from '../../lib/View'
 import GridMap from '../../lib/GridMap'
 
-class MapCreationView extends View {
+export default class MapCreationView extends View {
   __title = 'Map Creation'
 
   constructor() {
@@ -106,5 +106,3 @@ class MapCreationView extends View {
     )
   }
 }
-
-export default MapCreationView

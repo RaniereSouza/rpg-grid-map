@@ -1,6 +1,6 @@
 import View from '../../lib/View'
 
-class HomeView extends View {
+export default class HomeView extends View {
   __title = 'Home'
 
   constructor() {
@@ -32,5 +32,3 @@ class HomeView extends View {
     `
   }
 }
-
-export default HomeView

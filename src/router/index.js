@@ -1,4 +1,4 @@
-class Router {
+export default class Router {
   __currentRoute = {}
 
   get __potentialMatches() {
@@ -92,5 +92,3 @@ class Router {
     )
   }
 }
-
-export default Router

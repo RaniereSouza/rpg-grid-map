@@ -1,6 +1,6 @@
 import Component from './Component'
 
-class View extends Component {
+export default class View extends Component {
   __title = ''
 
   constructor() {
@@ -17,5 +17,3 @@ class View extends Component {
     super.__render.apply(this, [parent])
   }
 }
-
-export default View

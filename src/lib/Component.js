@@ -1,4 +1,4 @@
-class Component {
+export default class Component {
   constructor() {
     return new Proxy(this, {
       get: (target, key) => {
@@ -33,5 +33,3 @@ class Component {
     this.__afterRender()
   }
 }
-
-export default Component
