@@ -13,6 +13,10 @@ export default class Router {
     })
   }
 
+  get currentRoute() {
+    return target.__currentRoute.path
+  }
+
   constructor(viewContainer, routes = []) {
     this.__viewContainer  = viewContainer
     this.__routes         = routes.map(route => ({
@@ -21,19 +25,6 @@ export default class Router {
                             }))
 
     this.__watchForNavigation()
-
-    return new Proxy(this, {
-      get: (target, key) => {
-        const keyString   = String(key)
-        const visibleKeys = ['currentRoute', 'navigateTo']
-        if (!visibleKeys.includes(keyString)) return undefined
-
-        if (keyString === 'currentRoute') return target.__currentRoute.path
-        if (keyString === 'navigateTo') return function() {
-          target.__navigateTo.apply(target, arguments)
-        }
-      }
-    })
   }
 
   static create(viewContainer, routes) {
@@ -61,12 +52,12 @@ export default class Router {
     document.body.addEventListener('click', event => {
       if (event.target.matches('a[data-link]')) {
         event.preventDefault()
-        this.__navigateTo(event.target.getAttribute('href'))
+        this.navigateTo(event.target.getAttribute('href'))
       }
     })
   }
 
-  __navigateTo(path) {
+  navigateTo(path) {
     history.pushState(null, null, path)
     this.__matchCurrentRoute()
   }
