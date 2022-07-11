@@ -28,18 +28,9 @@ export const defaultRendererOptions = {
   preserveDrawingBuffer: true,
 }
 
-export const defaultGridOptions = {
-  bgColor:           0xFFFFFF,
-  squareFillColor:   0xF0F8FF,
-  squareBorderColor: 0x000000,
-  gridLift:          0.125, // distance between the background and the squares
-}
-
-class ThreeJSContext {
+export default class ThreeJSContext {
   constructor(canvas, {
-    cameraOptions   = {},
-    lightsOptions   = [],
-    rendererOptions = {},
+    cameraOptions = {}, lightsOptions = [], rendererOptions = {},
   }) {
     cameraOptions   = {...defaultCameraOptions,   ...cameraOptions}
     lightsOptions   = [...defaultLightsOptions,   ...lightsOptions]
@@ -52,8 +43,6 @@ class ThreeJSContext {
     this.__initHelpers()
 
     this.__animateScene()
-
-    return new Proxy(this, {})
   }
 
   static create(canvasSelector, options) {
@@ -106,13 +95,36 @@ class ThreeJSContext {
     requestAnimationFrame(this.__animateScene.bind(this))
   }
 
+  addObjectToScene(object) {
+    this.__scene.add(object)
+  }
+}
+
+export const defaultGridOptions = {
+  bgColor:           0xFFFFFF,
+  squareFillColor:   0xF0F8FF,
+  squareBorderColor: 0x000000,
+  squareBorderWidth: 5,
+  gridLift:          0.125, // distance between the background and the squares
+}
+
+export class ThreeJSObjectCreator {
+  constructor({ gridOptions = {} }) {
+    this.__gridOptions = {...defaultGridOptions, ...gridOptions}
+  }
+
+  static create(options) {
+    return new ThreeJSObjectCreator(options)
+  }
+
   createGridObject(width, height) {
     const {
-      bgColor, squareFillColor,
-      squareBorderColor, gridLift,
-    } = defaultGridOptions
+      bgColor,
+      squareFillColor, squareBorderColor, squareBorderWidth,
+      gridLift,
+    } = this.__gridOptions
 
-    const background = this.__createPlaneObject({
+    const wrapper = this.__createPlaneObject({
       geometryOptions: {width, height, widthSegments: 1, heightSegments: 1},
       materialOptions: {color: bgColor},
     })
@@ -124,24 +136,17 @@ class ThreeJSContext {
 
     const border = this.__createEdgesObject({
       geometryObject:  square.geometry,
-      materialOptions: {color: squareBorderColor},
+      materialOptions: {color: squareBorderColor, linewidth: squareBorderWidth},
     })
     square.add(border)
 
-    function createGridSquareObject({ row, column, positionX, positionY }) {
+    function createGridSquareObject({ positionX, positionY }) {
       const squareCopy       = square.clone()
-      const squareCopyBorder = squareCopy.children[0]
+      const squareCopyBorder = squareCopy.children[0] // the border previously added to the square, first (and only) child of the square's ThreeJS object
 
-      squareCopy.position.setX(positionX)
-      squareCopy.position.setY(positionY)
-      squareCopy.position.setZ(gridLift)
+      squareCopy.position.set(positionX, positionY, gridLift)
 
-      return {
-        row,
-        column,
-        fill:   squareCopy,
-        border: squareCopyBorder,
-      }
+      return {row, column, fill: squareCopy, border: squareCopyBorder}
     }
 
     let squares = []
@@ -153,26 +158,19 @@ class ThreeJSContext {
       for (let positionY = -(height / 2) + 0.5; positionY < (height / 2); positionY++) {
         column++
 
-        const gridSquareObject = createGridSquareObject({
-          row, column, positionX, positionY,
-        })
-
-        background.add(gridSquareObject.fill)
+        const gridSquareObject = createGridSquareObject({positionX, positionY})
+        wrapper.add(gridSquareObject.fill)
         squares.push(gridSquareObject)
       }
     }
 
-    this.__scene.add(background)
-
-    return {width, height, background, squares}
+    return {width, height, wrapper, squares}
   }
 
   __createPlaneObject({ geometryOptions, materialOptions }) {
     const planeGeometry = new THREE.PlaneGeometry(
-      geometryOptions.width,
-      geometryOptions.height,
-      geometryOptions.widthSegments,
-      geometryOptions.heightSegments,
+      geometryOptions.width, geometryOptions.height,
+      geometryOptions.widthSegments, geometryOptions.heightSegments,
     )
     const planeMaterial = new THREE.MeshBasicMaterial(materialOptions)
     return new THREE.Mesh(planeGeometry, planeMaterial)
@@ -181,10 +179,7 @@ class ThreeJSContext {
   __createEdgesObject({ geometryObject, materialOptions }) {
     const edgesGeometry = new THREE.EdgesGeometry(geometryObject)
     return new THREE.LineSegments(
-      edgesGeometry,
-      new THREE.LineBasicMaterial(materialOptions),
+      edgesGeometry, new THREE.LineBasicMaterial(materialOptions),
     )
   }
 }
-
-export default ThreeJSContext
