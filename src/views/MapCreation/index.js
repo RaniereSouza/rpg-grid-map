@@ -15,9 +15,9 @@ export default class MapCreationView extends View {
       }
 
       body {
-        display:  inline-block;
-        width:    100vw;
-        height:   100vh;
+        display: inline-block;
+        width:   100vw;
+        height:  100vh;
       }
 
       h1 {
@@ -97,8 +97,8 @@ export default class MapCreationView extends View {
       event => {
         event.preventDefault()
 
-        const width  = Number(document.querySelector('#map-creation-width').value)
-        const height = Number(document.querySelector('#map-creation-height').value)
+        const width  = parseInt(document.querySelector('#map-creation-width').value)
+        const height = parseInt(document.querySelector('#map-creation-height').value)
 
         this.__gridMap.initBlankGrid(width, height)
         document.querySelector('#map-creation-form').classList.add('hidden')
