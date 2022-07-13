@@ -1,14 +1,14 @@
 import ThreeJSContext, { ThreeJSObjectCreator } from './ThreeJSContext'
 
 export default class GridMap {
-  static __graphicContext = null
-  static __objectCreator  = null
+  static __objectCreator = null
 
   constructor(canvasSelector) {
-    if (!GridMap.__graphicContext) {
-      GridMap.__graphicContext = ThreeJSContext.create(canvasSelector, {})
+    if (!GridMap.__objectCreator) {
       GridMap.__objectCreator  = ThreeJSObjectCreator.create({})
     }
+
+    this.__graphicContext = ThreeJSContext.create(canvasSelector, {})
   }
 
   static create(canvasSelector) {
@@ -17,6 +17,6 @@ export default class GridMap {
 
   initBlankGrid(width, height) {
     this.__grid = GridMap.__objectCreator.createGridObject(width, height)
-    GridMap.__graphicContext.addObjectToScene(this.__grid.wrapper)
+    this.__graphicContext.addObjectToScene(this.__grid.wrapper)
   }
 }
