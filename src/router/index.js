@@ -45,7 +45,7 @@ export default class Router {
       this.__matchCurrentRoute()
     })
 
-    window.addEventListener('popstate', this.__matchCurrentRoute)
+    window.addEventListener('popstate', () => this.__matchCurrentRoute())
   }
 
   __setNavigationLinkEvents() {
