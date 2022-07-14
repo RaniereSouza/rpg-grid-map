@@ -6,14 +6,14 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "cy:open": "cypress open",
+    "cy:open": "cypress open --e2e",
     "serve:test": "concurrently \"npm:build -- --watch\" \"npm:preview -- --config vite.test-config.js\"",
     "test:e2e": "concurrently --kill-others \"npm:serve:test\" \"npm:cy:open\""
   },
   "devDependencies": {
     "@applitools/eyes-cypress": "^3.26.2",
     "concurrently": "^7.1.0",
-    "cypress": "^9.6.1",
+    "cypress": "^10.3.0",
     "cypress-cucumber-preprocessor": "^4.3.1",
     "vite": "^2.9.7"
   },
