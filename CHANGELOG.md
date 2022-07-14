@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Visual Regression Testing on Cypress with Applitools
 ### Changed
 - Better naming for some NPM scripts
+- Migrating from Cypress 9 to Cypress 10
 
 ## [0.0.1] - 2022-05-19
 ### Fixed
