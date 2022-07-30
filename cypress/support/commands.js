@@ -24,18 +24,11 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
-import '@applitools/eyes-cypress/commands'
-
 Cypress.Commands.add('visualTest', {prevSubject: true}, (_, snapshotName) => {
   const snapshotSuffix = `--${
     Cypress.config('viewportWidth')}x${Cypress.config('viewportHeight')
   }`
   const snapshotCompleteName = `${snapshotName}${snapshotSuffix}`
 
-  cy.eyesOpen({
-    appName:   'rpg-grid-map',
-    batchName: Cypress.currentTest.title.replace(/\s\(example #[0-9]+\)$/, ''), 
-  })
-  cy.eyesCheckWindow(snapshotCompleteName)
-  cy.eyesClose()
+  throw Error('Not implemented yet.')
 })
