@@ -109,7 +109,24 @@ Cypress.Commands.add('visualTest', {prevSubject: true}, (_, snapshotName) => {
   }`
   const snapshotCompleteName = `${snapshotName}${snapshotSuffix}`
 
-  cy.screenshot(snapshotCompleteName, {
+  Cypress.on('fail', function noBaseImgFailHandler(error, _) {
+    if (
+      error.message.includes('failed because the file does not exist at the following path:') &&
+      error.message.match(new RegExp(
+        `[\\\\\\\/]cypress[\\\\\\\/]screenshots[\\\\\\\/]base[\\\\\\\/]${
+          snapshotCompleteName
+        }`, 'g',
+      ))
+    )
+      console.log('This is logged specifically when the expected file is not found.')
+
+    Cypress.off('fail', noBaseImgFailHandler)
+    throw error
+  })
+
+  cy.readFile(`/cypress/screenshots/base/${snapshotCompleteName}`).should('exist')
+
+  /* cy.screenshot(snapshotCompleteName, {
     overwrite: true,
     onBeforeScreenshot: _=> {
       // document.querySelectorAll(`.modal-overlay[data-current-spec="${
@@ -121,8 +138,8 @@ Cypress.Commands.add('visualTest', {prevSubject: true}, (_, snapshotName) => {
       //   Cypress.spec.name
       // }"]`).forEach(el => (el.style.visibility = 'visible'))
     },
-  }).then(screenshotResult => {
-    // const modal = setupVisualTestModal(/*html*/`
+  }).then(_=> {
+    // const modal = setupVisualTestModal(`
     //   <canvas data-current-test="${Cypress.currentTest.title}"></canvas>
     //   <button class="unyield">Click me!</button>
     // `)
@@ -141,7 +158,7 @@ Cypress.Commands.add('visualTest', {prevSubject: true}, (_, snapshotName) => {
     // modal.show()
     // return blocker
     // // console.log('screenshotResult:', screenshotResult);
-  })
+  }) */
 
-  throw Error('Not implemented yet.')
+  // throw Error('Not implemented yet.')
 })
