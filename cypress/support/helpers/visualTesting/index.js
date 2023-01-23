@@ -54,12 +54,14 @@ function highlightedDiffPixel(pixel1, pixel2, threshold) {
 function logDiffResult(diffPixelsCount, totalPixels, threshold) {
   const isBiggerOrEqual = ((diffPixelsCount / totalPixels) >= threshold)
 
-  console.log(`different pixels: ${
+  // console.log(...)
+  cy.log(`different pixels: ${
     isBiggerOrEqual ? 'at least ': ''
   }${diffPixelsCount} out of ${totalPixels}. (${
     ((diffPixelsCount / totalPixels) * 100).toFixed(2)
   }%)`)
-  console.log(`the difference between images is ${
+  // console.log(...)
+  cy.log(`the difference between images is ${
     isBiggerOrEqual ? 'bigger than or equal' : 'smaller than'
   } the ${threshold * 100}% threshold.`)
 }
@@ -90,7 +92,9 @@ function calcDiffWithCanvas({
     const [ diffR, diffG, diffB, diffA ] = highlightedDiffPixel(img1Pixel, img2Pixel, pxDistThreshold)
     img3Array[i] = diffR; img3Array[i + 1] = diffG; img3Array[i + 2] = diffB; img3Array[i + 3] = diffA
 
-    if (((diffPixelsCount / totalPixels) >= qtdDiffThreshold) && !thresholdReached) thresholdReached = true
+    if (((diffPixelsCount / totalPixels) >= qtdDiffThreshold) && !thresholdReached) {
+      thresholdReached = true; break
+    }
   }
   ctxDiff.putImageData(img3Data, x, y)
 
@@ -105,7 +109,7 @@ function calcDiffWithCanvas({
 }
 
 function loadImage(url, onloadCallback) {
-  const img = new Image(); img.crossOrigin = 'anonymous'
+  const img = new Image(); img.crossOrigin = 'anonymous'; img.hasLoaded = false
   img.onload = _=> {
     img.hasLoaded = true; onloadCallback(img)
   }
@@ -114,45 +118,51 @@ function loadImage(url, onloadCallback) {
   return img
 }
 
-function testImagesDiff({
+export function testImagesDiff({
   baseImgUrl, newImgUrl,
   qtdDiffThreshold = 0.05, pxDistThreshold = 0.1,
   maxTries = 30, triesIntervalMs = 100,
 }) {
-  const canvasBase = document.createElement('canvas'), canvasBaseCtx = canvasBase.getContext('2d')
-  const canvasCurrent = document.createElement('canvas'), canvasCurrentCtx = canvasCurrent.getContext('2d')
-  const canvasDiff = document.createElement('canvas')
-  canvasBase.id = 'canvas-base'; canvasCurrent.id = 'canvas-current'; canvasDiff.id = 'canvas-diff'
+  return new Promise((resolve, reject) => {
+    const canvasBase = document.createElement('canvas'), canvasBaseCtx = canvasBase.getContext('2d')
+    const canvasCurrent = document.createElement('canvas'), canvasCurrentCtx = canvasCurrent.getContext('2d')
+    const canvasDiff = document.createElement('canvas')
+    canvasBase.id = 'canvas-base'; canvasCurrent.id = 'canvas-current'; canvasDiff.id = 'canvas-diff'
 
-  const imgBase = loadImage(baseImgUrl, loadedImg => {
-    canvasBase.width = loadedImg.width; canvasBase.height = loadedImg.height
-    canvasBaseCtx.drawImage(loadedImg, 0, 0)
-  })
-  const imgCurrent = loadImage(newImgUrl, loadedImg => {
-    canvasCurrent.width = loadedImg.width; canvasCurrent.height = loadedImg.height
-    canvasCurrentCtx.drawImage(loadedImg, 0, 0)
-  })
+    const imgBase = loadImage(baseImgUrl, loadedImg => {
+      canvasBase.width = loadedImg.width; canvasBase.height = loadedImg.height
+      canvasBaseCtx.drawImage(loadedImg, 0, 0)
+    })
+    const imgCurrent = loadImage(newImgUrl, loadedImg => {
+      canvasCurrent.width = loadedImg.width; canvasCurrent.height = loadedImg.height
+      canvasCurrentCtx.drawImage(loadedImg, 0, 0)
+    })
 
-  let triesCount = 0
-  const intervalRef = setInterval(_=> {
-    triesCount++
-    if (imgBase.hasLoaded && imgCurrent.hasLoaded) {
-      console.log('both images loaded.')
-      clearInterval(intervalRef)
+    let triesCount = 0
+    const intervalRef = setInterval(_=> {
+      triesCount++
+      if (imgBase.hasLoaded && imgCurrent.hasLoaded) {
+        clearInterval(intervalRef)
 
-      if ((canvasBase.width !== canvasCurrent.width) || (canvasBase.height !== canvasCurrent.height)) {
-        console.log('cannot diff images with different sizes.'); return
+        if ((canvasBase.width !== canvasCurrent.width) || (canvasBase.height !== canvasCurrent.height)) {
+          reject(Error('cannot diff images with different sizes.')); return
+        }
+
+        const result = calcDiffWithCanvas({
+          canvasBase, canvasCurrent, canvasDiff,
+          qtdDiffThreshold, pxDistThreshold,
+          x: 0, y: 0, width: canvasBase.width, height: canvasBase.height,
+        })
+
+        logDiffResult(result.qtdDiffPixels, result.totalImgPixels, qtdDiffThreshold)
+
+        if (result.thresholdReached) reject(Error('images are different.'))
+        else resolve(result)
       }
-
-      calcDiffWithCanvas({
-        canvasBase, canvasCurrent, canvasDiff,
-        qtdDiffThreshold, pxDistThreshold,
-        x: 0, y: 0, width: canvasBase.width, height: canvasBase.height,
-      })
-    }
-    else if (triesCount >= maxTries) {
-      console.log('some image could not be loaded in the expected time.')
-      clearInterval(intervalRef)
-    }
-  }, triesIntervalMs)
+      else if (triesCount >= maxTries) {
+        reject(Error('some image could not be loaded in the expected time.'))
+        clearInterval(intervalRef)
+      }
+    }, triesIntervalMs)
+  })
 }
