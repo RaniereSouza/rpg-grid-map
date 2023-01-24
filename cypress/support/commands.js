@@ -109,24 +109,42 @@ Cypress.Commands.add('visualTest', {prevSubject: true}, (_, snapshotName) => {
   }`
   const snapshotCompleteName = `${snapshotName}${snapshotSuffix}`
 
-  Cypress.on('fail', function noBaseImgFailHandler(error, _) {
-    if (
-      error.message.includes('failed because the file does not exist at the following path:') &&
-      error.message.match(new RegExp(
-        `[\\\\\\\/]cypress[\\\\\\\/]screenshots[\\\\\\\/]base[\\\\\\\/]${
-          snapshotCompleteName
-        }`, 'g',
-      ))
-    )
-      console.log('This is logged specifically when the expected file is not found.')
+  // Cypress.on('fail', function noBaseImgFailHandler(error, _) {
+  //   Cypress.off('fail', noBaseImgFailHandler)
+  //
+  //   if (
+  //     error.message.includes('failed because the file does not exist at the following path:') &&
+  //     error.message.match(new RegExp(
+  //       `[\\\\\\\/]cypress[\\\\\\\/]screenshots[\\\\\\\/]base[\\\\\\\/]${
+  //         snapshotCompleteName
+  //       }`, 'g',
+  //     ))
+  //   ) {
+  //     return cy.screenshot(`/base/${snapshotCompleteName}`)
+  //   }
+  //
+  //   throw error
+  // })
 
-    Cypress.off('fail', noBaseImgFailHandler)
-    throw error
-  })
+  cy.readFile(`cypress/screenshots/base/${snapshotCompleteName}.png`)
+    .should('not.exist')
+    .then(_=> {
+      cy.screenshot(`/base/${snapshotCompleteName}`)
+    })
 
-  cy.readFile(`/cypress/screenshots/base/${snapshotCompleteName}`).should('exist')
+  cy.readFile(`cypress/screenshots/base/${snapshotCompleteName}.png`)
+    .should('exist')
+    .then(_=> {
+      cy.log('success')
+      cy.screenshot(`/current/${snapshotCompleteName}`, {
+        overwrite: true,
+        onAfterScreenshot: () => {
 
-  /* cy.screenshot(snapshotCompleteName, {
+        },
+      })
+    })
+
+  /* cy.screenshot(`/cypress/screenshots/current/${snapshotCompleteName}`, {
     overwrite: true,
     onBeforeScreenshot: _=> {
       // document.querySelectorAll(`.modal-overlay[data-current-spec="${
