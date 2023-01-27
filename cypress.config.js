@@ -1,6 +1,7 @@
 const { defineConfig }     = require('cypress')
 const { loadEnv }          = require('vite')
 const { default:cucumber } = require('cypress-cucumber-preprocessor')
+const visualTestingTasks   = require('./cypress/support/helpers/visualTesting/nodeEnvironment')
 
 const envTestFile = loadEnv('test', process.cwd(), '')
 const port        = envTestFile.PORT || '3000'
@@ -14,6 +15,7 @@ module.exports = defineConfig({
     specPattern: 'cypress/e2e/**/*.{feature,features}',
     setupNodeEvents(on, config) {
       on('file:preprocessor', cucumber())
+      on('task', {...visualTestingTasks(config)})
       config.env = {...config.env, ...envTestFile}
     },
   },

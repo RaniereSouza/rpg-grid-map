@@ -24,6 +24,8 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
+// import { testImagesDiff } from './helpers/visualTesting'
+
 // const document = Cypress.$(window.parent.window.document)[0]
 
 // function setupVisualTestModal(content) {
@@ -109,40 +111,23 @@ Cypress.Commands.add('visualTest', {prevSubject: true}, (_, snapshotName) => {
   }`
   const snapshotCompleteName = `${snapshotName}${snapshotSuffix}`
 
-  // Cypress.on('fail', function noBaseImgFailHandler(error, _) {
-  //   Cypress.off('fail', noBaseImgFailHandler)
-  //
-  //   if (
-  //     error.message.includes('failed because the file does not exist at the following path:') &&
-  //     error.message.match(new RegExp(
-  //       `[\\\\\\\/]cypress[\\\\\\\/]screenshots[\\\\\\\/]base[\\\\\\\/]${
-  //         snapshotCompleteName
-  //       }`, 'g',
-  //     ))
-  //   ) {
-  //     return cy.screenshot(`/base/${snapshotCompleteName}`)
-  //   }
-  //
-  //   throw error
-  // })
+  cy.task('doesFileExist', {
+    filePath: `/base/${snapshotCompleteName}.png`
+  }).then(result => {
+    // console.log('result from cy.task("doesFileExist"):', result)
 
-  cy.readFile(`cypress/screenshots/base/${snapshotCompleteName}.png`)
-    .should('not.exist')
-    .then(_=> {
-      cy.screenshot(`/base/${snapshotCompleteName}`)
-    })
+    if (result === false) cy.screenshot(`/base/${snapshotCompleteName}`)
 
-  cy.readFile(`cypress/screenshots/base/${snapshotCompleteName}.png`)
-    .should('exist')
-    .then(_=> {
-      cy.log('success')
-      cy.screenshot(`/current/${snapshotCompleteName}`, {
-        overwrite: true,
-        onAfterScreenshot: () => {
+    cy.screenshot(`/current/${snapshotCompleteName}`, {overwrite: true})
 
-        },
+    cy.readFile(`cypress/screenshots/base/${snapshotCompleteName}.png`, 'base64').then(baseImg => {
+      cy.readFile(`cypress/screenshots/current/${snapshotCompleteName}.png`, 'base64').then(currentImg => {
+        console.log('baseImg:', baseImg)
+        console.log('currentImg:', currentImg)
+        // const comparisonResults = await testImagesDiff(baseImg, currentImg) 
       })
     })
+  })
 
   /* cy.screenshot(`/cypress/screenshots/current/${snapshotCompleteName}`, {
     overwrite: true,
