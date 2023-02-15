@@ -24,144 +24,83 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
-// import { testImagesDiff } from './helpers/visualTesting'
+import { testImagesDiff, imgBase64ToDataUrl } from './helpers/visualTesting'
+import { setupVisualTestModal, hideAllVisualTestModals, showAllVisualTestModals } from './helpers/visualTesting/modal'
 
-// const document = Cypress.$(window.parent.window.document)[0]
+Cypress.Commands.add('visualTest', {prevSubject: 'optional'}, (_, {
+  snapshotName, commandTimeout = 30_000, imageDiffOptions = {},
+}) => {
+  const previousCommandTimeout = Cypress.config('defaultCommandTimeout')
+  Cypress.config('defaultCommandTimeout', commandTimeout)
 
-// function setupVisualTestModal(content) {
-//   const specName = Cypress.spec.name
-//
-//   const modalStyle = /*css*/`
-//     .modal-overlay {
-//       z-index: 9999;
-//       background-color: #1b1e2e88;
-//       width: 100vw;
-//       height: 100vh;
-//       display: flex;
-//       align-items: center;
-//       justify-content: center;
-//       position: absolute;
-//       top: 0;
-//       left: 0;
-//     }
-//
-//     .modal-overlay .modal-wrapper {
-//       background-color: #e0e8ef;
-//       position: relative;
-//       width: 75vw;
-//       height: 75vh;
-//       display: flex;
-//       flex-direction: column;
-//       align-items: center;
-//       justify-content: center;
-//     }
-//
-//     .modal-overlay .modal-wrapper .modal-close {
-//       position: absolute;
-//       top: 0;
-//       right: 0;
-//       color: #e0e8ef;
-//       background-color: firebrick;
-//       padding: 8px 12px;
-//     }
-//   `
-//
-//   const modalTemplate = /*html*/`
-//     <div class="modal-wrapper">
-//       <button class="modal-close">Close</button>
-//       <div class="modal-body">
-//         ${content}
-//       </div>
-//     </div>
-//   `
-//
-//   const modalOverlay = document.createElement('div')
-//   modalOverlay.classList.add('modal-overlay')
-//   modalOverlay.setAttribute('data-current-spec', specName)
-//   modalOverlay.innerHTML = /*html*/`
-//     <style>
-//       ${modalStyle}
-//     </style>
-//     ${modalTemplate}
-//   `
-//   modalOverlay.querySelector('.modal-close')?.addEventListener('click', _ => {
-//     modalOverlay.hide()
-//   })
-//
-//   modalOverlay.show = function() {
-//     document.body.appendChild(modalOverlay)
-//   }
-//
-//   modalOverlay.hide = function() {
-//     modalOverlay.remove()
-//   }
-//
-//   return modalOverlay
-// }
-
-// function loadImageToCanvas(imageUrl, canvas2dContext) {
-//   const image = new Image()
-//   image.src = imageUrl
-//   image.onload = () => canvas2dContext.drawImage(img)
-// }
-
-Cypress.Commands.add('visualTest', {prevSubject: true}, (_, snapshotName) => {
   const snapshotSuffix = `--${
     Cypress.config('viewportWidth')}x${Cypress.config('viewportHeight')
   }`
   const snapshotCompleteName = `${snapshotName}${snapshotSuffix}`
 
-  cy.task('doesFileExist', {
-    filePath: `/base/${snapshotCompleteName}.png`
-  }).then(result => {
-    // console.log('result from cy.task("doesFileExist"):', result)
+  cy.task('maybeFileExists', {filePath: `/base/${snapshotCompleteName}.png`})
+    .then(result => {
+      if (result === false) {
+        cy.log('Saving base screen image for Visual Testing...')
+        cy.screenshot(`/base/${snapshotCompleteName}`)
+        Cypress.config('defaultCommandTimeout', previousCommandTimeout)
+        return
+      }
 
-    if (result === false) cy.screenshot(`/base/${snapshotCompleteName}`)
-
-    cy.screenshot(`/current/${snapshotCompleteName}`, {overwrite: true})
-
-    cy.readFile(`cypress/screenshots/base/${snapshotCompleteName}.png`, 'base64').then(baseImg => {
-      cy.readFile(`cypress/screenshots/current/${snapshotCompleteName}.png`, 'base64').then(currentImg => {
-        console.log('baseImg:', baseImg)
-        console.log('currentImg:', currentImg)
-        // const comparisonResults = await testImagesDiff(baseImg, currentImg) 
+      cy.log('Updating current screen image for Visual Testing comparison...')
+      cy.screenshot(`/current/${snapshotCompleteName}`, {
+        overwrite: true,
+        onBeforeScreenshot: _=> hideAllVisualTestModals(),
+        onAfterScreenshot: _=> showAllVisualTestModals(),
       })
+
+      cy.readFile(`cypress/screenshots/base/${snapshotCompleteName}.png`, 'base64')
+        .then(baseImgUrl => {
+          cy.readFile(`cypress/screenshots/current/${snapshotCompleteName}.png`, 'base64')
+            .then(async newImgUrl => {
+              baseImgUrl = imgBase64ToDataUrl(baseImgUrl)
+              newImgUrl = imgBase64ToDataUrl(newImgUrl)
+
+              const forcedYield = Cypress.$.Deferred()
+              function resolve() {
+                Cypress.config('defaultCommandTimeout', previousCommandTimeout)
+                forcedYield.resolve()
+              }
+              function reject(err) {
+                Cypress.config('defaultCommandTimeout', previousCommandTimeout)
+                forcedYield.reject(err)
+              }
+
+              const { appendResultsTo, thresholdReached, diffResultMessage } = await testImagesDiff({
+                ...imageDiffOptions, baseImgUrl, newImgUrl,
+              }).catch(reject)
+              const differentImagesError = Error(
+                'The current screen was evaluated as different from the expected in comparison to the base image.\n\n' +
+                diffResultMessage
+              )
+
+              const modal = setupVisualTestModal(/*html*/`
+                <style>
+                  .canvas-wrapper {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 8px;
+                  }
+
+                  .canvas-wrapper canvas {
+                    width: 80%;
+                  }
+                </style>
+                <div class="canvas-wrapper" data-current-test="${Cypress.currentTest.title}"></div>
+              `, _=> !thresholdReached ? resolve() : reject(differentImagesError))
+
+              const modalCanvasWrapper = modal.querySelector('.canvas-wrapper')
+              appendResultsTo(modalCanvasWrapper)
+
+              modal.show()
+              return forcedYield
+            })
+        })
     })
-  })
-
-  /* cy.screenshot(`/cypress/screenshots/current/${snapshotCompleteName}`, {
-    overwrite: true,
-    onBeforeScreenshot: _=> {
-      // document.querySelectorAll(`.modal-overlay[data-current-spec="${
-      //   Cypress.spec.name
-      // }"]`).forEach(el => (el.style.visibility = 'hidden'))
-    },
-    onAfterScreenshot: _=> {
-      // document.querySelectorAll(`.modal-overlay[data-current-spec="${
-      //   Cypress.spec.name
-      // }"]`).forEach(el => (el.style.visibility = 'visible'))
-    },
-  }).then(_=> {
-    // const modal = setupVisualTestModal(`
-    //   <canvas data-current-test="${Cypress.currentTest.title}"></canvas>
-    //   <button class="unyield">Click me!</button>
-    // `)
-
-    // const modalCanvas = modal.querySelector('canvas')
-    // const ctx = modalCanvas.getContext('2d')
-    // loadImageToCanvas(`cypress/screenshots/${snapshotCompleteName}`, ctx)
-
-    // const blocker = Cypress.$.Deferred()
-    // const modalBtn = modal.querySelector('button.unyield')
-    // modalBtn.addEventListener('click', event => {
-    //   event.preventDefault()
-    //   blocker.resolve()
-    // })
-
-    // modal.show()
-    // return blocker
-    // // console.log('screenshotResult:', screenshotResult);
-  }) */
-
-  // throw Error('Not implemented yet.')
 })

@@ -15,9 +15,10 @@ class MapCreationPage {
 
   hasNewBlankGridMap(width, height) {
     mapCreationElements.mapCreationForm.should('not.be.visible')
-    mapCreationElements.gridMapCanvas.visualTest(
-      `map-creation-blank-grid-${width}x${height}`,
-    )
+    mapCreationElements.gridMapCanvas.visualTest({
+      snapshotName: `map-creation-blank-grid-${width}x${height}`,
+      imageDiffOptions: {qtdDiffThreshold: 0.01},
+    })
   }
 }
 

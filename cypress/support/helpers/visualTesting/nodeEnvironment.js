@@ -1,6 +1,6 @@
 module.exports = function visualTestingTasks(cypressConfig) {
   return {
-    "doesFileExist": ({ filePath }) => {
+    "maybeFileExists": ({ filePath }) => {
       const fs = require('fs/promises')
 
       filePath = filePath.trim().replace(/^(\/*)/, '')

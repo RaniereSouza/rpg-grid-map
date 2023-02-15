@@ -27,13 +27,6 @@ function rgbToHsl([r, g, b]) {
   return [Math.round(h), Math.round(s), Math.round(l)]
 };
 
-// function rgbToGreyscale([r, g, b]) {
-//   const medium = ((r + g + b) / 3)
-//   return [medium, medium, medium]
-// };
-
-// function invertPixel([ r, g, b ]) { return [255 - r, 255 - g, 255 - b] }
-
 /** Comparação em HSL */
 function arePixelsEqual([ r1, g1, b1 ], [ r2, g2, b2 ], threshold) {
   const [ h1, s1, l1 ] = rgbToHsl([r1, g1, b1])
@@ -54,16 +47,17 @@ function highlightedDiffPixel(pixel1, pixel2, threshold) {
 function logDiffResult(diffPixelsCount, totalPixels, threshold) {
   const isBiggerOrEqual = ((diffPixelsCount / totalPixels) >= threshold)
 
-  // console.log(...)
-  cy.log(`different pixels: ${
+  const diffResultMessage = `different pixels: ${
     isBiggerOrEqual ? 'at least ': ''
-  }${diffPixelsCount} out of ${totalPixels}. (${
+  }${diffPixelsCount} out of ${totalPixels} (${
     ((diffPixelsCount / totalPixels) * 100).toFixed(2)
-  }%)`)
-  // console.log(...)
-  cy.log(`the difference between images is ${
+  }%).\n\n` +
+  `the difference between images is ${
     isBiggerOrEqual ? 'bigger than or equal' : 'smaller than'
-  } the ${threshold * 100}% threshold.`)
+  } the ${threshold * 100}% threshold.`
+
+  cy.log(diffResultMessage)
+  return diffResultMessage
 }
 
 function calcDiffWithCanvas({
@@ -87,13 +81,13 @@ function calcDiffWithCanvas({
   for (let i = 0, len = img1Array.length; i < len; i += 4) {
     img1Pixel = [img1Array[i], img1Array[i + 1], img1Array[i + 2]]
     img2Pixel = [img2Array[i], img2Array[i + 1], img2Array[i + 2]]
-    if (!arePixelsEqual(img1Pixel, img2Pixel, pxDistThreshold)) diffPixelsCount++
+    if (!arePixelsEqual(img1Pixel, img2Pixel, pxDistThreshold) && !thresholdReached) diffPixelsCount++
 
     const [ diffR, diffG, diffB, diffA ] = highlightedDiffPixel(img1Pixel, img2Pixel, pxDistThreshold)
     img3Array[i] = diffR; img3Array[i + 1] = diffG; img3Array[i + 2] = diffB; img3Array[i + 3] = diffA
 
     if (((diffPixelsCount / totalPixels) >= qtdDiffThreshold) && !thresholdReached) {
-      thresholdReached = true; break
+      thresholdReached = true
     }
   }
   ctxDiff.putImageData(img3Data, x, y)
@@ -154,10 +148,12 @@ export function testImagesDiff({
           x: 0, y: 0, width: canvasBase.width, height: canvasBase.height,
         })
 
-        logDiffResult(result.qtdDiffPixels, result.totalImgPixels, qtdDiffThreshold)
-
-        if (result.thresholdReached) reject(Error('images are different.'))
-        else resolve(result)
+        resolve({
+          ...result,
+          diffResultMessage: logDiffResult(
+            result.qtdDiffPixels, result.totalImgPixels, qtdDiffThreshold,
+          ),
+        })
       }
       else if (triesCount >= maxTries) {
         reject(Error('some image could not be loaded in the expected time.'))
@@ -165,4 +161,8 @@ export function testImagesDiff({
       }
     }, triesIntervalMs)
   })
+}
+
+export function imgBase64ToDataUrl(base64String) {
+  return `data:image/png;base64,${base64String}`
 }
