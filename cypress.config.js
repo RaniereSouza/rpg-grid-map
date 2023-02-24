@@ -1,3 +1,4 @@
+const path                 = require('path')
 const { defineConfig }     = require('cypress')
 const { loadEnv }          = require('vite')
 const { default:cucumber } = require('cypress-cucumber-preprocessor')
@@ -18,5 +19,6 @@ module.exports = defineConfig({
       on('task', {...visualTestingTasks(config)})
       config.env = {...config.env, ...envTestFile}
     },
+    visualTestFolder: path.join(__dirname, 'cypress/visual-test-screenshots'),
   },
 })

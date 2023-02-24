@@ -104,9 +104,7 @@ function calcDiffWithCanvas({
 
 function loadImage(url, onloadCallback) {
   const img = new Image(); img.crossOrigin = 'anonymous'; img.hasLoaded = false
-  img.onload = _=> {
-    img.hasLoaded = true; onloadCallback(img)
-  }
+  img.onload = _=> { img.hasLoaded = true; onloadCallback(img) }
   img.src = url
 
   return img

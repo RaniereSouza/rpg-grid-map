@@ -27,6 +27,10 @@
 import { testImagesDiff, imgBase64ToDataUrl } from './helpers/visualTesting'
 import { setupVisualTestModal, hideAllVisualTestModals, showAllVisualTestModals } from './helpers/visualTesting/modal'
 
+function normalizeFilename(filename) {
+  return filename.trim().replace(/\//g, '_')
+}
+
 Cypress.Commands.add('visualTest', {prevSubject: 'optional'}, (_, {
   snapshotName, commandTimeout = 30_000, imageDiffOptions = {},
 }) => {
@@ -36,28 +40,30 @@ Cypress.Commands.add('visualTest', {prevSubject: 'optional'}, (_, {
   const snapshotSuffix = `--${
     Cypress.config('viewportWidth')}x${Cypress.config('viewportHeight')
   }`
-  const snapshotCompleteName = `${snapshotName}${snapshotSuffix}`
+  const snapshotCompleteName = normalizeFilename(`${snapshotName}${snapshotSuffix}`)
 
-  cy.task('maybeFileExists', {filePath: `/base/${snapshotCompleteName}.png`})
+  cy.task('maybeVisualTestExists', {imageName: snapshotCompleteName})
     .then(result => {
       if (result === false) {
         cy.log('Saving base screen image for Visual Testing...')
-        cy.screenshot(`/base/${snapshotCompleteName}`)
+        cy.screenshot(snapshotCompleteName).then(_=> cy.task('mvToVisualTestFolder', {imageName: snapshotCompleteName}))
         Cypress.config('defaultCommandTimeout', previousCommandTimeout)
         return
       }
 
       cy.log('Updating current screen image for Visual Testing comparison...')
-      cy.screenshot(`/current/${snapshotCompleteName}`, {
+      cy.screenshot(snapshotCompleteName, {
         overwrite: true,
         onBeforeScreenshot: _=> hideAllVisualTestModals(),
         onAfterScreenshot: _=> showAllVisualTestModals(),
       })
 
-      cy.readFile(`cypress/screenshots/base/${snapshotCompleteName}.png`, 'base64')
+      cy.readFile(`${Cypress.config('visualTestFolder')}/${snapshotCompleteName}.png`, 'base64')
         .then(baseImgUrl => {
-          cy.readFile(`cypress/screenshots/current/${snapshotCompleteName}.png`, 'base64')
+          cy.readFile(`${Cypress.config('screenshotsFolder')}/${snapshotCompleteName}.png`, 'base64')
             .then(async newImgUrl => {
+              await cy.task('rmCurrentVisualState', {imageName: snapshotCompleteName})
+
               baseImgUrl = imgBase64ToDataUrl(baseImgUrl)
               newImgUrl = imgBase64ToDataUrl(newImgUrl)
 
@@ -93,7 +99,7 @@ Cypress.Commands.add('visualTest', {prevSubject: 'optional'}, (_, {
                   }
                 </style>
                 <div class="canvas-wrapper" data-current-test="${Cypress.currentTest.title}"></div>
-              `, _=> !thresholdReached ? resolve() : reject(differentImagesError))
+              `, _=> thresholdReached ? reject(differentImagesError) : resolve())
 
               const modalCanvasWrapper = modal.querySelector('.canvas-wrapper')
               appendResultsTo(modalCanvasWrapper)

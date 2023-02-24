@@ -1,15 +1,38 @@
+const fs = require('fs/promises')
+
+function normalizeFilename(filename) {
+  return filename.trim().replace(/\//g, '_') + '.png'
+}
+
 module.exports = function visualTestingTasks(cypressConfig) {
   return {
-    "maybeFileExists": ({ filePath }) => {
-      const fs = require('fs/promises')
+    maybeVisualTestExists({ imageName })  {
+      imageName = normalizeFilename(imageName)
 
-      filePath = filePath.trim().replace(/^(\/*)/, '')
+      return fs.stat(`${cypressConfig.visualTestFolder}/${imageName}`)
+        .then(_=> true)
+        .catch(err => {
+          if (err.code === 'ENOENT') return false
+          else throw err
+        })
+    },
+    async mvToVisualTestFolder({ imageName }) {
+      imageName = normalizeFilename(imageName)
 
-      return new Promise((resolve, _) => {
-        fs.stat(`${cypressConfig.screenshotsFolder}/${filePath}`)
-          .then(() => resolve(true))
-          .catch(err => (console.error(err), resolve(false)))
+      await fs.stat(cypressConfig.visualTestFolder).catch(err => {
+        if (err.code === 'ENOENT') return fs.mkdir(cypressConfig.visualTestFolder)
+        else throw err
       })
+
+      return fs.rename(
+        `${cypressConfig.screenshotsFolder}/${imageName}`,
+        `${cypressConfig.visualTestFolder}/${imageName}`
+      )
+    },
+    rmCurrentVisualState({ imageName }) {
+      imageName = normalizeFilename(imageName)
+      return fs.rm(`${cypressConfig.screenshotsFolder}/${imageName}`)
+        .then(_=> null)
     },
   }
 }
