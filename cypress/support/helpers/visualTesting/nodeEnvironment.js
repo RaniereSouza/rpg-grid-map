@@ -28,6 +28,7 @@ module.exports = function visualTestingTasks(cypressConfig) {
         `${cypressConfig.screenshotsFolder}/${imageName}`,
         `${cypressConfig.visualTestFolder}/${imageName}`
       )
+        .then(_=> null)
     },
     rmCurrentVisualState({ imageName }) {
       imageName = normalizeFilename(imageName)
