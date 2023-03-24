@@ -6,7 +6,7 @@ function normalizeFilename(filename) {
 
 module.exports = function visualTestingTasks(cypressConfig) {
   return {
-    maybeVisualTestExists({ imageName })  {
+    maybeVisualTestExists({ imageName }) {
       imageName = normalizeFilename(imageName)
 
       return fs.stat(`${cypressConfig.visualTestFolder}/${imageName}`)

@@ -77,9 +77,18 @@ Cypress.Commands.add('visualTest', {prevSubject: 'optional'}, (_, {
                 forcedYield.reject(err)
               }
 
-              const { appendResultsTo, thresholdReached, diffResultMessage } = await testImagesDiff({
-                ...imageDiffOptions, baseImgUrl, newImgUrl,
-              }).catch(reject)
+              let appendResultsTo, thresholdReached, diffResultMessage
+
+              try {
+                const result = await testImagesDiff({...imageDiffOptions, baseImgUrl, newImgUrl})
+                appendResultsTo = result.appendResultsTo
+                thresholdReached = result.thresholdReached
+                diffResultMessage = result.diffResultMessage
+              }
+              catch(err) {
+                return reject(err)
+              }
+
               const differentImagesError = Error(
                 'The current screen was evaluated as different from the expected in comparison to the base image.\n\n' +
                 diffResultMessage
