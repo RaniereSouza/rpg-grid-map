@@ -86,7 +86,8 @@ Cypress.Commands.add('visualTest', {prevSubject: 'optional'}, (_, {
                 diffResultMessage = result.diffResultMessage
               }
               catch(err) {
-                return reject(err)
+                reject(err)
+                return forcedYield
               }
 
               const differentImagesError = Error(
