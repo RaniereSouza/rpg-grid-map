@@ -21,3 +21,6 @@ With those tools the DMs can manage the entire game if they want, even character
 * Monorepo
 * GitHub Actions (CI/CD)
 * (More descriptions soon...)
+
+## Known Issues
+* For OS configurations where the screen is in a different scale from the original (for example: on Windows 10 when the screen configuration "Adjust scale and layout" has a value different from "100%" in it's "Change size for text, apps and other items" field), you might experience a difference on the expected size for Cypress' screenshot images. This can be troublesome specially when dealing with Visual Testing. For now, the only way of solving this is to configure your screen back to it's original scale in your OS' screen configuration.
