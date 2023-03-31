@@ -1,5 +1,4 @@
 import { testImagesDiff, imgBase64ToDataUrl } from './helpers/visualTesting'
-import { setupVisualTestModal, hideAllVisualTestModals, showAllVisualTestModals } from './helpers/visualTesting/modal'
 
 function normalizeFilename(filename) {
   return filename.trim().replace(/\//g, '_')
@@ -26,11 +25,7 @@ Cypress.Commands.add('visualTest', {prevSubject: 'optional'}, (_, {
       }
 
       cy.log('Updating current screen image for Visual Testing comparison...')
-      cy.screenshot(snapshotCompleteName, {
-        overwrite: true,
-        onBeforeScreenshot: _=> hideAllVisualTestModals(),
-        onAfterScreenshot: _=> showAllVisualTestModals(),
-      })
+      cy.screenshot(snapshotCompleteName, {overwrite: true})
 
       cy.readFile(`${Cypress.config('visualTestFolder')}/${snapshotCompleteName}.png`, 'base64')
         .then(baseImgUrl => {
@@ -41,54 +36,13 @@ Cypress.Commands.add('visualTest', {prevSubject: 'optional'}, (_, {
               baseImgUrl = imgBase64ToDataUrl(baseImgUrl)
               newImgUrl = imgBase64ToDataUrl(newImgUrl)
 
-              const forcedYield = Cypress.$.Deferred()
-              function resolve() {
-                Cypress.config('defaultCommandTimeout', previousCommandTimeout)
-                forcedYield.resolve()
-              }
-              function reject(err) {
-                Cypress.config('defaultCommandTimeout', previousCommandTimeout)
-                forcedYield.reject(err)
-              }
+              const { thresholdReached, diffResultMessage } = await testImagesDiff({...imageDiffOptions, baseImgUrl, newImgUrl})
 
-              let appendResultsTo, thresholdReached, diffResultMessage
-              try {
-                const result = await testImagesDiff({...imageDiffOptions, baseImgUrl, newImgUrl})
-                appendResultsTo = result.appendResultsTo
-                thresholdReached = result.thresholdReached
-                diffResultMessage = result.diffResultMessage
-              }
-              catch(err) {
-                reject(err)
-                return forcedYield
-              }
-
-              const differentImagesError = Error(
+              if (thresholdReached) throw Error(
                 'The current screen was evaluated as different from the expected in comparison to the base image.\n\n' +
                 diffResultMessage
               )
-
-              const modal = setupVisualTestModal(/*html*/`
-                <style>
-                  .canvas-wrapper {
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    gap: 8px;
-                  }
-
-                  .canvas-wrapper canvas {
-                    width: 80%;
-                  }
-                </style>
-                <div class="canvas-wrapper" data-current-test="${Cypress.currentTest.title}"></div>
-              `, _=> thresholdReached ? reject(differentImagesError) : resolve())
-
-              const modalCanvasWrapper = modal.querySelector('.canvas-wrapper')
-              appendResultsTo(modalCanvasWrapper)
-
-              modal.show()
-              return forcedYield
+              else cy.log(diffResultMessage)
             })
         })
     })
