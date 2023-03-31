@@ -44,7 +44,7 @@ function highlightedDiffPixel(pixel1, pixel2, threshold) {
          [255, pixel2[1], pixel2[2], 255]
 }
 
-function logDiffResult(diffPixelsCount, totalPixels, threshold) {
+function diffResultMessage(diffPixelsCount, totalPixels, threshold) {
   const isBiggerOrEqual = ((diffPixelsCount / totalPixels) >= threshold)
 
   const diffResultMessage = `different pixels: ${
@@ -56,7 +56,6 @@ function logDiffResult(diffPixelsCount, totalPixels, threshold) {
     isBiggerOrEqual ? 'bigger than or equal' : 'smaller than'
   } the ${threshold * 100}% threshold.`
 
-  cy.log(diffResultMessage)
   return diffResultMessage
 }
 
@@ -148,7 +147,7 @@ export function testImagesDiff({
 
         resolve({
           ...result,
-          diffResultMessage: logDiffResult(
+          diffResultMessage: diffResultMessage(
             result.qtdDiffPixels, result.totalImgPixels, qtdDiffThreshold,
           ),
         })
