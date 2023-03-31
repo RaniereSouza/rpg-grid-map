@@ -28,7 +28,7 @@ export function setupVisualTestModal(content, onCloseCallback) {
       justify-content: flex-start;
       gap: 8px;
     }
-    
+
     .modal-overlay .modal-wrapper {
       overflow: hidden;
     }
