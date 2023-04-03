@@ -19,7 +19,8 @@ Cypress.Commands.add('visualTest', {prevSubject: 'optional'}, (_, {
     .then(result => {
       if (result === false) {
         cy.log('Saving base screen image for Visual Testing...')
-        cy.screenshot(snapshotCompleteName).then(_=> cy.task('mvToVisualTestFolder', {imageName: snapshotCompleteName}))
+        cy.screenshot(snapshotCompleteName)
+          .then(_=> cy.task('mvToVisualTestFolder', {imageName: snapshotCompleteName}))
         Cypress.config('defaultCommandTimeout', previousCommandTimeout)
         return
       }
