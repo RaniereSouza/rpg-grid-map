@@ -11,13 +11,12 @@
     "test:e2e": "concurrently --kill-others \"npm:serve:test\" \"npm:cy:open\""
   },
   "devDependencies": {
+    "@badeball/cypress-cucumber-preprocessor": "^16.0.3",
+    "@bahmutov/cypress-esbuild-preprocessor": "^2.2.0",
     "concurrently": "^7.1.0",
     "cypress": "^10.3.0",
-    "cypress-cucumber-preprocessor": "^4.3.1",
+    "heimdall-visual-test": "^0.0.1",
     "vite": "^2.9.7"
-  },
-  "cypress-cucumber-preprocessor": {
-    "step_definitions": "cypress/support/steps"
   },
   "dependencies": {
     "three": "^0.140.2"
