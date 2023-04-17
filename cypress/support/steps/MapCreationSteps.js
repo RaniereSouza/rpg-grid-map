@@ -1,9 +1,9 @@
-import { Given, And, When, Then } from 'cypress-cucumber-preprocessor/steps'
+import { Given, When, Then } from '@badeball/cypress-cucumber-preprocessor'
 
 import homePage        from '../pageObjects/HomePage'
 import mapCreationPage from '../pageObjects/MapCreationPage'
 
-And('I choose the map creation action', () => {
+Given('I choose the map creation action', () => {
   homePage.chooseMapCreation()
 })
 

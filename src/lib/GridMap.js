@@ -5,7 +5,7 @@ export default class GridMap {
 
   constructor(canvasSelector) {
     if (!GridMap.__objectCreator) {
-      GridMap.__objectCreator  = ThreeJSObjectCreator.create({})
+      GridMap.__objectCreator = ThreeJSObjectCreator.create({})
     }
 
     this.__graphicContext = ThreeJSContext.create(canvasSelector, {})

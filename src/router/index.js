@@ -14,7 +14,7 @@ export default class Router {
   }
 
   get currentRoute() {
-    return target.__currentRoute.path
+    return this.__currentRoute.path
   }
 
   constructor(viewContainer, routes = []) {
@@ -77,9 +77,6 @@ export default class Router {
   }
 
   __renderCurrentView(routeParams) {
-    this.__currentRoute.view.render(
-      this.__viewContainer,
-      routeParams,
-    )
+    this.__currentRoute.view.render(this.__viewContainer, routeParams)
   }
 }

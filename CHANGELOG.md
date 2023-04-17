@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Map creation view
 - Canvas manipulation and 3D context with Three.js
 - Blank grid creation minimal functionality
-- Visual Regression Testing on Cypress with Applitools
+- Visual Regression Testing on Cypress (custom solution into external library `heimdall-visual-test`)
 ### Changed
 - Better naming for some NPM scripts
 - Migrating from Cypress 9 to Cypress 10
