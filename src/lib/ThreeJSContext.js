@@ -1,7 +1,9 @@
 import * as THREE        from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
-export const defaultSceneBgColor = 0x30383F
+export const defaultSceneOptions = {
+  bgColor: 0x30383F,
+}
 
 export const defaultLightsOptions = [{
   type:             'PointLight',
@@ -30,13 +32,14 @@ export const defaultRendererOptions = {
 
 export default class ThreeJSContext {
   constructor(canvas, {
-    cameraOptions = {}, lightsOptions = [], rendererOptions = {},
+    sceneOptions = {}, cameraOptions = {}, lightsOptions = [], rendererOptions = {},
   }) {
+    sceneOptions    = {...defaultSceneOptions,    ...sceneOptions}
     cameraOptions   = {...defaultCameraOptions,   ...cameraOptions}
     lightsOptions   = [...defaultLightsOptions,   ...lightsOptions]
     rendererOptions = {...defaultRendererOptions, ...rendererOptions}
 
-    this.__initScene({defaultSceneBgColor})
+    this.__initScene(sceneOptions)
     this.__initLights(lightsOptions)
     this.__initCamera(cameraOptions)
     this.__initRenderer({...rendererOptions, canvas})
@@ -52,7 +55,7 @@ export default class ThreeJSContext {
 
   __initScene(sceneOptions) {
     this.__scene = new THREE.Scene()
-    this.__scene.background = new THREE.Color(sceneOptions.defaultSceneBgColor)
+    this.__scene.background = new THREE.Color(sceneOptions.bgColor)
   }
 
   __initLights(lightsOptions) {
