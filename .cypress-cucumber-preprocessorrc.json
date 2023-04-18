@@ -1,5 +1,0 @@
-{
-  "stepDefinitions": [
-    "cypress/support/steps/**/*.{js,ts}"
-  ]
-}
