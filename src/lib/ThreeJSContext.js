@@ -1,5 +1,6 @@
-import * as THREE        from 'three'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import * as THREE                     from 'three'
+import { OrbitControls }              from 'three/examples/jsm/controls/OrbitControls'
+import { MeshLine, MeshLineMaterial } from 'three.meshline'
 
 export const defaultSceneOptions = {
   bgColor: 0x30383F,
@@ -28,6 +29,8 @@ export const defaultRendererOptions = {
   width:                 window.innerWidth,
   height:                window.innerHeight,
   preserveDrawingBuffer: true,
+  antialias:             true,
+  alpha:                 true,
 }
 
 export default class ThreeJSContext {
@@ -107,7 +110,7 @@ export const defaultGridOptions = {
   bgColor:           0xFFFFFF,
   squareFillColor:   0xF0F8FF,
   squareBorderColor: 0x000000,
-  squareBorderWidth: 5,
+  squareBorderWidth: 2,
   gridLift:          0.125, // distance between the background and the squares
 }
 
@@ -118,6 +121,72 @@ export class ThreeJSObjectCreator {
 
   static create(options) {
     return new ThreeJSObjectCreator(options)
+  }
+
+  __createPlaneObject({ geometryOptions, materialOptions }) {
+    const planeGeometry = new THREE.PlaneGeometry(
+      geometryOptions.width, geometryOptions.height,
+      geometryOptions.widthSegments, geometryOptions.heightSegments,
+    )
+    const planeMaterial = new THREE.MeshBasicMaterial(materialOptions)
+    return new THREE.Mesh(planeGeometry, planeMaterial)
+  }
+
+  __createSquareObject({ size = 1, materialOptions }) {
+    return this.__createPlaneObject({
+      geometryOptions: {
+        width: size, height: size,
+        widthSegments: 1, heightSegments: 1
+      },
+      materialOptions,
+    })
+  }
+
+  __createEdgesObject({ geometryObject, materialOptions }) {
+    const edgesGeometry = new MeshLine()
+    edgesGeometry.setGeometry(new THREE.EdgesGeometry(geometryObject))
+    return new THREE.Mesh(
+      edgesGeometry,
+      new MeshLineMaterial({
+        ...materialOptions,
+        resolution:      new THREE.Vector2(window.innerWidth, window.innerHeight),
+        sizeAttenuation: false,
+        map:             null,
+        useMap:          false,
+        depthWrite:      false,
+        depthTest:       false,
+      }),
+    )
+  }
+
+  __createSquareBorderObject({ squareObject, materialOptions }) {
+    const squareSize = squareObject.geometry.parameters.width
+    const xByQuadrant = [
+      -(squareSize / 2), squareSize / 2,
+      squareSize / 2,    -(squareSize / 2),
+    ]
+    const yByQuadrant = [
+      squareSize / 2,    squareSize / 2,
+      -(squareSize / 2), -(squareSize / 2),
+    ]
+    const squareBorderShape = new THREE.Shape()
+
+    let firstVertex = []
+    for (let i = 0, len = 4; i < len; i++) {
+      const vertex = [xByQuadrant[i], yByQuadrant[i], 0]
+      if (i === 0) {
+        firstVertex = vertex
+        squareBorderShape.moveTo(...vertex)
+      }
+      else squareBorderShape.lineTo(...vertex)
+    }
+    squareBorderShape.lineTo(...firstVertex)
+
+    const squareBorderGeometry = new THREE.ShapeGeometry(squareBorderShape)
+    return this.__createEdgesObject({
+      geometryObject: squareBorderGeometry,
+      materialOptions,
+    })
   }
 
   createGridObject(width, height) {
@@ -132,14 +201,13 @@ export class ThreeJSObjectCreator {
       materialOptions: {color: bgColor},
     })
 
-    const square = this.__createPlaneObject({
-      geometryOptions: {width: 1, height: 1, widthSegments: 1, heightSegments: 1},
+    const square = this.__createSquareObject({
       materialOptions: {color: squareFillColor},
     })
 
-    const border = this.__createEdgesObject({
-      geometryObject:  square.geometry,
-      materialOptions: {color: squareBorderColor, linewidth: squareBorderWidth},
+    const border = this.__createSquareBorderObject({
+      squareObject:    square,
+      materialOptions: {color: squareBorderColor, lineWidth: squareBorderWidth},
     })
     square.add(border)
 
@@ -168,21 +236,5 @@ export class ThreeJSObjectCreator {
     }
 
     return {width, height, wrapper, squares}
-  }
-
-  __createPlaneObject({ geometryOptions, materialOptions }) {
-    const planeGeometry = new THREE.PlaneGeometry(
-      geometryOptions.width, geometryOptions.height,
-      geometryOptions.widthSegments, geometryOptions.heightSegments,
-    )
-    const planeMaterial = new THREE.MeshBasicMaterial(materialOptions)
-    return new THREE.Mesh(planeGeometry, planeMaterial)
-  }
-
-  __createEdgesObject({ geometryObject, materialOptions }) {
-    const edgesGeometry = new THREE.EdgesGeometry(geometryObject)
-    return new THREE.LineSegments(
-      edgesGeometry, new THREE.LineBasicMaterial(materialOptions),
-    )
   }
 }
