@@ -34,3 +34,23 @@ Given('I didn\'t choose any dimensions for width and height for my grid map',
 Then('The grid map creation confirmation should be disabled', () => {
   mapCreationPage.gridCreationConfirmIsDisabled()
 })
+
+Given('I choose any dimension for width for my grid map', () => {
+  const value = parseInt((Math.random() * 99) + 1)
+  mapCreationPage.chooseWidthByInput(value)
+})
+
+/** @And */
+Given('I didn\'t choose any dimension for height for my grid map', () => {
+  mapCreationPage.heightInputHasNoValue()
+})
+
+Given('I choose any dimension for height for my grid map', () => {
+  const value = parseInt((Math.random() * 99) + 1)
+  mapCreationPage.chooseHeightByInput(value)
+})
+
+/** @And */
+Given('I didn\'t choose any dimension for width for my grid map', () => {
+  mapCreationPage.widthInputHasNoValue()
+})

@@ -22,3 +22,13 @@ Feature: Map creation interface
     Example: Trying to create a blank grid without inputting dimensions
       Given I didn't choose any dimensions for width and height for my grid map
       Then The grid map creation confirmation should be disabled
+
+    Example: Trying to create a blank grid with only width dimension
+      Given I choose any dimension for width for my grid map
+      And I didn't choose any dimension for height for my grid map
+      Then The grid map creation confirmation should be disabled
+
+    Example: Trying to create a blank grid with only height dimension
+      Given I choose any dimension for height for my grid map
+      And I didn't choose any dimension for width for my grid map
+      Then The grid map creation confirmation should be disabled
