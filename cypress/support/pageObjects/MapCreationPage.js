@@ -20,6 +20,44 @@ class MapCreationPage {
       imageDiffOptions: {qtdDiffThreshold: 0.01},
     })
   }
+
+  widthInputHasValue(value) {
+    if (value === undefined || value === null || value === false) {
+      mapCreationElements.widthInput.invoke('val').should('be.empty')
+    }
+    else if (value === true) {
+      mapCreationElements.widthInput.invoke('val').should('not.be.empty')
+    }
+    else if (!isNaN(Number(value))) {
+      mapCreationElements.widthInput.should('have.value', Number(value))
+    }
+    else throw Error('The width input should not expect this value:', value)
+  }
+
+  widthInputHasNoValue() {
+    this.widthInputHasValue(null)
+  }
+
+  heightInputHasValue(value) {
+    if (value === undefined || value === null || value === false) {
+      mapCreationElements.heightInput.invoke('val').should('be.empty')
+    }
+    else if (value === true) {
+      mapCreationElements.heightInput.invoke('val').should('not.be.empty')
+    }
+    else if (!isNaN(Number(value))) {
+      mapCreationElements.heightInput.should('have.value', Number(value))
+    }
+    else throw Error('The height input should not expect this value:', value)
+  }
+
+  heightInputHasNoValue() {
+    this.heightInputHasValue(null)
+  }
+
+  gridCreationConfirmIsDisabled() {
+    mapCreationElements.confirmCreationButton.should('be.disabled')
+  }
 }
 
 export default new MapCreationPage()

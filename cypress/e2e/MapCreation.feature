@@ -16,3 +16,9 @@ Feature: Map creation interface
       |    30 |     40 |
       |    15 |     15 |
       |    50 |     20 |
+
+  Rule: It should not create a blank grid map with missing input
+
+    Example: Trying to create a blank grid without inputting dimensions
+      Given I didn't choose any dimensions for width and height for my grid map
+      Then The grid map creation confirmation should be disabled

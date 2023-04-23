@@ -93,16 +93,31 @@ export default class MapCreationView extends View {
   __afterRender() {
     this.__gridMap = GridMap.create('#map-creation-canvas')
 
-    document.querySelector('#map-creation-confirm-button').addEventListener('click',
-      event => {
-        event.preventDefault()
+    const confirmButton = document.querySelector('#map-creation-confirm-button'),
+          widthInput    = document.querySelector('#map-creation-width'),
+          heightInput   = document.querySelector('#map-creation-height')
 
-        const width  = parseInt(document.querySelector('#map-creation-width').value)
-        const height = parseInt(document.querySelector('#map-creation-height').value)
+    confirmButton.disabled = true
 
-        this.__gridMap.initBlankGrid(width, height)
-        document.querySelector('#map-creation-form').classList.add('hidden')
-      }
-    )
+    confirmButton.addEventListener('click', event => {
+      event.preventDefault()
+
+      const width  = parseInt(widthInput.value),
+            height = parseInt(heightInput.value)
+
+      this.__gridMap.initBlankGrid(width, height)
+      document.querySelector('#map-creation-form').classList.add('hidden')
+    })
+
+    function toggleDisableButtonOnEmptyInput(event) {
+      const input = event.target
+      const otherInput = input.matches('#map-creation-width') ? heightInput : widthInput
+
+      if (!input.value || !otherInput.value) confirmButton.disabled = true
+      else confirmButton.disabled = false
+    }
+
+    widthInput.addEventListener('input', toggleDisableButtonOnEmptyInput)
+    heightInput.addEventListener('input', toggleDisableButtonOnEmptyInput)
   }
 }
