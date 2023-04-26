@@ -7,14 +7,19 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Automatically generated directories and files
 node_modules
 dist
 dist-ssr
 cypress/downloads
+cypress/screenshots
+
+# Reference files with potentially sensitive data
 *.local
 .env*
 !.env.example
 !.env.test
+drafts
 
 # Editor directories and files
 .vscode/*
