@@ -1,4 +1,6 @@
-import { Given, When, Then } from '@badeball/cypress-cucumber-preprocessor'
+import { Given, When, Then, defineParameterType } from '@badeball/cypress-cucumber-preprocessor'
+
+import { randomIntFrom1to100, randomlyChooseBetween } from './helpers/randomize'
 
 import homePage        from '../pageObjects/HomePage'
 import mapCreationPage from '../pageObjects/MapCreationPage'
@@ -16,7 +18,7 @@ Given(
   }
 )
 
-When('I (try to )confirm the grid map creation', () => {
+When('I( try to) confirm the grid map creation', () => {
   mapCreationPage.confirmGridCreation()
 })
 
@@ -36,7 +38,7 @@ Then('The grid map creation confirmation should be disabled', () => {
 })
 
 Given('I choose any dimension for width for my grid map', () => {
-  const value = parseInt((Math.random() * 99) + 1)
+  const value = randomIntFrom1to100()
   mapCreationPage.chooseWidthByInput(value)
 })
 
@@ -46,7 +48,7 @@ Given('I didn\'t choose any dimension for height for my grid map', () => {
 })
 
 Given('I choose any dimension for height for my grid map', () => {
-  const value = parseInt((Math.random() * 99) + 1)
+  const value = randomIntFrom1to100()
   mapCreationPage.chooseHeightByInput(value)
 })
 
@@ -54,3 +56,50 @@ Given('I choose any dimension for height for my grid map', () => {
 Given('I didn\'t choose any dimension for width for my grid map', () => {
   mapCreationPage.widthInputHasNoValue()
 })
+
+function randomlyChooseDimensionInput() {
+  return randomlyChooseBetween(['width', 'height'])
+}
+
+Given('I choose a valid dimension for one of the dimension inputs for my grid map',
+  function() {
+    const input = randomlyChooseDimensionInput()
+    const value = randomIntFrom1to100()
+
+    this.validInput = {}; this.otherInput = {}
+
+    if (input === 'width') {
+      this.validInput.chooseValue = mapCreationPage.chooseWidthByInput
+      this.otherInput.chooseValue = mapCreationPage.chooseHeightByInput
+    }
+    else if (input === 'height') {
+      this.validInput.chooseValue = mapCreationPage.chooseHeightByInput
+      this.otherInput.chooseValue = mapCreationPage.chooseWidthByInput
+    }
+
+    this.validInput.chooseValue(value)
+  }
+)
+
+defineParameterType({
+  name:        'invalidType',
+  regexp:      /(zero|negative|non\-integer|non\-numeric) value/,
+  transformer: s => s,
+})
+
+Given('I choose a(n) {invalidType} for the other dimension input for my grid map',
+  function(invalidType) {
+    if (invalidType === 'zero') {
+      this.otherInput.chooseValue(0)
+    }
+    else if (invalidType === 'negative') {
+      this.otherInput.chooseValue(randomIntFrom1to100() * -1)
+    }
+    else if (invalidType === 'non-integer') {
+      this.otherInput.chooseValue(randomIntFrom1to100() - 0.5)
+    }
+    else if (invalidType === 'non-numeric') {
+      this.otherInput.chooseValue('.')
+    }
+  }
+)

@@ -1,5 +1,6 @@
-import View    from '../../lib/View'
-import GridMap from '../../lib/GridMap'
+import View                      from '../../lib/View'
+import GridMap                   from '../../lib/GridMap'
+import { isDimensionValueValid } from '../../lib/validation/dimensionInputValidation'
 
 export default class MapCreationView extends View {
   __title = 'Map Creation'
@@ -78,12 +79,29 @@ export default class MapCreationView extends View {
           <legend>What dimensions do you want for your grid?</legend>
 
           <label for="map-creation-width">Width</label>
-          <input id="map-creation-width" type="number" step="1" data-testid="map-creation-width-input" />
+          <input
+            id="map-creation-width"
+            type="number"
+            step="1"
+            min="1"
+            data-testid="map-creation-width-input"
+          />
 
           <label for="map-creation-height">Height</label>
-          <input id="map-creation-height" type="number" step="1" data-testid="map-creation-height-input" />
+          <input
+            id="map-creation-height"
+            type="number"
+            step="1"
+            min="1"
+            data-testid="map-creation-height-input"
+          />
 
-          <button id="map-creation-confirm-button" data-testid="map-creation-confirm-button">Create</button>
+          <button
+            id="map-creation-confirm-button"
+            data-testid="map-creation-confirm-button"
+          >
+            Create
+          </button>
         </fieldset>
       </div>
       <canvas id="map-creation-canvas" data-testid="map-creation-canvas"></canvas>
@@ -109,15 +127,18 @@ export default class MapCreationView extends View {
       document.querySelector('#map-creation-form').classList.add('hidden')
     })
 
-    function toggleDisableButtonOnEmptyInput(event) {
+    function toggleDisableButtonOnInvalidInput(event) {
       const input = event.target
       const otherInput = input.matches('#map-creation-width') ? heightInput : widthInput
 
-      if (!input.value || !otherInput.value) confirmButton.disabled = true
+      if (
+        !isDimensionValueValid(input.value) ||
+        !isDimensionValueValid(otherInput.value)
+      ) confirmButton.disabled = true
       else confirmButton.disabled = false
     }
 
-    widthInput.addEventListener('input', toggleDisableButtonOnEmptyInput)
-    heightInput.addEventListener('input', toggleDisableButtonOnEmptyInput)
+    widthInput.addEventListener('input', toggleDisableButtonOnInvalidInput)
+    heightInput.addEventListener('input', toggleDisableButtonOnInvalidInput)
   }
 }
