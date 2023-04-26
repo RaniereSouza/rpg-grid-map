@@ -1,3 +1,4 @@
+@map_editor_page
 Feature: Map creation interface
 
   As an user on the Internet, I want to create grid maps to use on my tabletop RPG games
@@ -6,6 +7,7 @@ Feature: Map creation interface
     Given I access the application
     And I choose the map creation action
 
+  @happy_path
   Scenario Outline: Creating a blank grid map with the chosen dimensions
     Given I choose the dimensions <width> for width and <height> for height for my grid map
     When I confirm the grid map creation
@@ -17,6 +19,7 @@ Feature: Map creation interface
       |    15 |     15 |
       |    50 |     20 |
 
+  @sad_path
   Rule: It should not create a blank grid map with missing input
 
     Example: Trying to create a blank grid without inputting dimensions
@@ -33,6 +36,7 @@ Feature: Map creation interface
       And I didn't choose any dimension for width for my grid map
       Then The grid map creation confirmation should be disabled
 
+  @sad_path
   Rule: It should not create a blank grid map with invalid input values
 
     Background:
