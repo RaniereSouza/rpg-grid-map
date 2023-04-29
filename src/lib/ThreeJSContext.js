@@ -1,6 +1,10 @@
-import * as THREE                     from 'three'
-import { OrbitControls }              from 'three/examples/jsm/controls/OrbitControls'
-import { MeshLine, MeshLineMaterial } from 'three.meshline'
+import  * as THREE        from 'three'
+import  { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import  {
+          MeshLine as MeshLineGeometry,
+          MeshLineMaterial,
+          MeshLineRaycast as meshLineRaycast,
+        }                 from 'three.meshline'
 
 export const defaultSceneOptions = {
   bgColor: 0x30383F,
@@ -143,9 +147,9 @@ export class ThreeJSObjectCreator {
   }
 
   __createEdgesObject({ geometryObject, materialOptions }) {
-    const edgesGeometry = new MeshLine()
+    const edgesGeometry = new MeshLineGeometry()
     edgesGeometry.setGeometry(new THREE.EdgesGeometry(geometryObject))
-    return new THREE.Mesh(
+    const mesh = new THREE.Mesh(
       edgesGeometry,
       new MeshLineMaterial({
         ...materialOptions,
@@ -157,6 +161,8 @@ export class ThreeJSObjectCreator {
         depthTest:       false,
       }),
     )
+    mesh.raycast = meshLineRaycast
+    return mesh
   }
 
   __createSquareBorderObject({ squareObject, materialOptions }) {
