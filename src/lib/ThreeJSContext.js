@@ -1,6 +1,8 @@
-import * as THREE                     from 'three'
-import { OrbitControls }              from 'three/examples/jsm/controls/OrbitControls'
-import { MeshLine, MeshLineMaterial } from 'three.meshline'
+import * as THREE        from 'three'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import { LineMaterial }  from 'three/examples/jsm/lines/LineMaterial.js'
+import { LineGeometry }  from 'three/examples/jsm/lines/LineGeometry.js'
+import { Line2 }         from 'three/examples/jsm/lines/Line2.js'
 
 export const defaultSceneOptions = {
   bgColor: 0x30383F,
@@ -110,7 +112,7 @@ export const defaultGridOptions = {
   bgColor:           0xFFFFFF,
   squareFillColor:   0xF0F8FF,
   squareBorderColor: 0x000000,
-  squareBorderWidth: 2,
+  squareBorderWidth: 1,
   gridLift:          0.125, // distance between the background and the squares
 }
 
@@ -143,20 +145,17 @@ export class ThreeJSObjectCreator {
   }
 
   __createEdgesObject({ geometryObject, materialOptions }) {
-    const edgesGeometry = new MeshLine()
-    edgesGeometry.setGeometry(new THREE.EdgesGeometry(geometryObject))
-    return new THREE.Mesh(
-      edgesGeometry,
-      new MeshLineMaterial({
-        ...materialOptions,
-        resolution:      new THREE.Vector2(window.innerWidth, window.innerHeight),
-        sizeAttenuation: false,
-        map:             null,
-        useMap:          false,
-        depthWrite:      false,
-        depthTest:       false,
-      }),
-    )
+    const edgesGeometry = new THREE.EdgesGeometry(geometryObject)
+
+    const lineGeometry = new LineGeometry()
+    lineGeometry.setPositions(edgesGeometry.attributes.position.array)
+
+    const lineMaterial = new LineMaterial({
+      ...materialOptions,
+      resolution: new THREE.Vector2(window.innerWidth, window.innerHeight),
+      dashed:     false,
+    })
+    return new Line2(lineGeometry, lineMaterial)
   }
 
   __createSquareBorderObject({ squareObject, materialOptions }) {
@@ -207,7 +206,7 @@ export class ThreeJSObjectCreator {
 
     const border = this.__createSquareBorderObject({
       squareObject:    square,
-      materialOptions: {color: squareBorderColor, lineWidth: squareBorderWidth},
+      materialOptions: {color: squareBorderColor, linewidth: squareBorderWidth},
     })
     square.add(border)
 
