@@ -9,14 +9,13 @@ const { createEsbuildPlugin }           = require('@badeball/cypress-cucumber-pr
 const visualTestingTasks = require('heimdall-visual-test/src/cypress/taskHandlers')
 
 const envTestFile = loadEnv('test', process.cwd(), '')
-const port        = envTestFile.PORT || '3000'
-const baseUrl     = `http://localhost:${port}`
 
 module.exports = defineConfig({
   viewportWidth:  1336,
   viewportHeight: 768,
+  port: parseInt(envTestFile.PORT || '3001'),
+  fileServerFolder: path.join(__dirname, './dist'),
   e2e: {
-    baseUrl,
     specPattern: 'cypress/e2e/**/*.{feature,features}',
     async setupNodeEvents(on, config) {
       await addCucumberPreprocessorPlugin(on, config)
