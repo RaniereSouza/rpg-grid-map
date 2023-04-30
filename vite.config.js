@@ -6,9 +6,10 @@ export default defineConfig(({ mode }) => {
 
   return {
     preview: {
-      port: parseInt(env.PORT || '3000'),
+      port: parseInt(env.PORT || '80'),
     },
     server: {
+      port: parseInt(env.PORT || '3000'),
       watch: {
         ignored: [path.resolve(__dirname, './drafts')],
       },

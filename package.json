@@ -1,21 +1,20 @@
 {
   "name": "rpg-grid-map",
   "private": true,
-  "version": "0.1.1",
+  "version": "0.1.2",
   "scripts": {
-    "serve:dev": "vite",
     "build": "vite build",
     "build:watch": "npm run build -- --watch",
+    "serve:dev": "vite --mode development",
     "serve:build": "vite preview",
     "cy:open": "cypress open --e2e",
-    "serve:test": "concurrently \"npm:build:watch -- --mode test\" \"npm:serve:build -- --mode test\"",
-    "test:e2e": "concurrently --kill-others \"npm:serve:test\" \"npm:cy:open\""
+    "test:e2e": "concurrently --kill-others \"npm:build:watch -- --mode test\" \"npm:cy:open\""
   },
   "devDependencies": {
     "@badeball/cypress-cucumber-preprocessor": "^16.0.3",
     "@bahmutov/cypress-esbuild-preprocessor": "^2.2.0",
     "concurrently": "^7.1.0",
-    "cypress": "^10.3.0",
+    "cypress": "^12.11.0",
     "heimdall-visual-test": "^0.0.1",
     "vite": "^4.3.2"
   },
