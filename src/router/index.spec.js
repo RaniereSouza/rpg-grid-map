@@ -16,7 +16,7 @@ describe('class #Router', () => {
       createRouter.should.not.throw
       createRouter().should.be.an.instanceof(Router)
     })
-  
+
     // @happy_path
     it('should instantiate correctly with a valid array of routes', () => {
       // Given
@@ -27,7 +27,7 @@ describe('class #Router', () => {
       createRouter.should.not.throw
       createRouter().should.be.an.instanceof(Router)
     })
-  
+
     // @sad_path
     it('should not instantiate correctly with a viewContainer that isn\'t an HTMLElement', () => {
       // Given
@@ -36,7 +36,7 @@ describe('class #Router', () => {
       // Then
       createRouter.should.throw(TypeError, 'viewContainer argument must be an HTMLElement')
     })
-  
+
     // @sad_path
     it('should not instantiate correctly with routes that that are not a valid array of routes', () => {
       // Given

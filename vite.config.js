@@ -11,7 +11,10 @@ export default defineConfig(({ mode }) => {
     server: {
       port: parseInt(env.PORT || '3000'),
       watch: {
-        ignored: [path.resolve(__dirname, './drafts')],
+        ignored: [
+          path.resolve(__dirname, './drafts'),
+          'src/**/*.spec.js',
+        ],
       },
     },
     build: {
