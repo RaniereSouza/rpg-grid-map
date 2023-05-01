@@ -7,7 +7,7 @@ describe('class #Router', () => {
   initShouldSyntax()
 
   describe('(static) method #create', () => {
-    // @happy-path
+    // @happy_path
     it('should instantiate correctly with an HTMLElement as viewContainer', () => {
       // Given
       const viewContainer = document.createElement('div'),
@@ -17,7 +17,7 @@ describe('class #Router', () => {
       createRouter().should.be.an.instanceof(Router)
     })
   
-    // @happy-path
+    // @happy_path
     it('should instantiate correctly with a valid array of routes', () => {
       // Given
       const viewContainer = document.createElement('div'),
@@ -28,7 +28,7 @@ describe('class #Router', () => {
       createRouter().should.be.an.instanceof(Router)
     })
   
-    // @sad-path
+    // @sad_path
     it('should not instantiate correctly with a viewContainer that isn\'t an HTMLElement', () => {
       // Given
       const viewContainer = {},
@@ -37,7 +37,7 @@ describe('class #Router', () => {
       createRouter.should.throw(TypeError, 'viewContainer argument must be an HTMLElement')
     })
   
-    // @sad-path
+    // @sad_path
     it('should not instantiate correctly with routes that that are not a valid array of routes', () => {
       // Given
       const viewContainer = document.createElement('div'),

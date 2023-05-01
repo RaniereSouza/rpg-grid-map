@@ -6,8 +6,8 @@ import { isDimensionValueValid } from './dimensionInputValidation'
 describe('function #isDimensionValueValid', () => {
   initShouldSyntax()
 
-  // @happy-path
-  it('should check for a positive integer number', () => {
+  // @happy_path
+  it('should pass for a positive integer number', () => {
     // Given
     const inputA = 42,
           inputB = 69
@@ -19,8 +19,8 @@ describe('function #isDimensionValueValid', () => {
     resultB.should.be.true
   })
 
-  // @happy-path
-  it('should check for a string representing a positive integer number', () => {
+  // @happy_path
+  it('should pass for a string representing a positive integer number', () => {
     // Given
     const inputA = '042',
           inputB = '0069'
@@ -32,8 +32,8 @@ describe('function #isDimensionValueValid', () => {
     resultB.should.be.true
   })
 
-  // @sad-path
-  it('should not check for an input that is not a number nor a string', () => {
+  // @sad_path
+  it('should not pass for an input that is not a number nor a string', () => {
     // Given
     const inputA = null,
           inputB = {},
@@ -48,8 +48,8 @@ describe('function #isDimensionValueValid', () => {
     resultC.should.be.false
   })
 
-  // @sad-path
-  it('should not check for a string that doesn\'t represent a number', () => {
+  // @sad_path
+  it('should not pass for a string that doesn\'t represent a number', () => {
     // Given
     const inputA = '',
           inputB = 'NaN',
@@ -64,8 +64,8 @@ describe('function #isDimensionValueValid', () => {
     resultC.should.be.false
   })
 
-  // @sad-path
-  it('should not check for a number zero input (number or string)', () => {
+  // @sad_path
+  it('should not pass for a number zero input (number or string)', () => {
     // Given
     const inputA = 0,
           inputB = '0'
@@ -77,8 +77,8 @@ describe('function #isDimensionValueValid', () => {
     resultB.should.be.false
   })
 
-  // @sad-path
-  it('should not check for a negative number input (number or string)', () => {
+  // @sad_path
+  it('should not pass for a negative number input (number or string)', () => {
     // Given
     const inputA = -42,
           inputB = '-69'
@@ -90,8 +90,8 @@ describe('function #isDimensionValueValid', () => {
     resultB.should.be.false
   })
 
-  // @sad-path
-  it('should not check for a decimal/float input (number or string)', () => {
+  // @sad_path
+  it('should not pass for a decimal/float input (number or string)', () => {
     // Given
     const inputA = 4.2,
           inputB = '6.9'

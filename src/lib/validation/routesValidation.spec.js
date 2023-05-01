@@ -8,8 +8,8 @@ import { isRoutesValid } from './routesValidation'
 describe('function #isRoutesValid', () => {
   initShouldSyntax()
 
-  // @happy-path
-  it('should check for an empty array', () => {
+  // @happy_path
+  it('should pass for an empty array', () => {
     // Given
     const input = []
     // When
@@ -18,8 +18,8 @@ describe('function #isRoutesValid', () => {
     result.should.be.true
   })
 
-  // @happy-path
-  it('should check for a correctly formed array of routes', () => {
+  // @happy_path
+  it('should pass for a correctly formed array of routes', () => {
     // Given
     class ViewSubclass extends View {
       constructor() { super() }
@@ -35,18 +35,18 @@ describe('function #isRoutesValid', () => {
     result.should.be.true
   })
 
-  // @sad-path
-  it.todo('should not check for an array with some route missing the path')
+  // @sad_path
+  it.todo('should not pass for an array with some route missing the path')
 
-  // @sad-path
-  it.todo('should not check for an array with some route missing the view')
+  // @sad_path
+  it.todo('should not pass for an array with some route missing the view')
 
-  // @sad-path
-  it.todo('should not check for an array with some route with a path that is not a string')
+  // @sad_path
+  it.todo('should not pass for an array with some route with a path that is not a string')
 
-  // @sad-path
-  it.todo('should not check for an array with some route with a view that is not an instance of View')
+  // @sad_path
+  it.todo('should not pass for an array with some route with a view that is not an instance of View')
 
-  // @sad-path
-  it.todo('should not check for an array with some route with a view that is not a function')
+  // @sad_path
+  it.todo('should not pass for an array with some route with a view that is not a function')
 })
