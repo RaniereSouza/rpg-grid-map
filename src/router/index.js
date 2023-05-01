@@ -1,3 +1,15 @@
+import View from '../lib/View'
+
+function isRoutesValid(routesArg) {
+  if (!Array.isArray(routesArg)) return false
+  if (routesArg.length === 0) return true
+
+  return !routesArg.some(item => (
+    !item.path || !item.view || (typeof item.path !== 'string') ||
+    (!(item.view instanceof View) && (typeof item.view !== 'function'))
+  ))
+}
+
 export default class Router {
   __currentRoute = {}
 
@@ -17,7 +29,7 @@ export default class Router {
     return this.__currentRoute.path
   }
 
-  constructor(viewContainer, routes = []) {
+  constructor(viewContainer, routes) {
     this.__viewContainer  = viewContainer
     this.__routes         = routes.map(route => ({
                               ...route,
@@ -27,7 +39,13 @@ export default class Router {
     this.__watchForNavigation()
   }
 
-  static create(viewContainer, routes) {
+  static create(viewContainer, routes = []) {
+    if (!(viewContainer instanceof HTMLElement))
+      throw TypeError('viewContainer argument must be an HTMLElement')
+
+    if (!isRoutesValid(routes))
+      throw TypeError('routes argument must be a valid array of routes')
+
     return new Router(viewContainer, routes)
   }
 
