@@ -1,10 +1,10 @@
 // @vitest-environment jsdom
-import { describe, it, should } from 'vitest'
+import { describe, it, should as initShouldSyntax } from 'vitest'
 
 import { isDimensionValueValid } from './dimensionInputValidation'
 
 describe('function #isDimensionValueValid', () => {
-  should()
+  initShouldSyntax()
 
   // @happy-path
   it('should check for a positive integer number', () => {
