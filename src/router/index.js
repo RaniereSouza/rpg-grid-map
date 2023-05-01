@@ -1,14 +1,4 @@
-import View from '../lib/View'
-
-function isRoutesValid(routesArg) {
-  if (!Array.isArray(routesArg)) return false
-  if (routesArg.length === 0) return true
-
-  return !routesArg.some(item => (
-    !item.path || !item.view || (typeof item.path !== 'string') ||
-    (!(item.view instanceof View) && (typeof item.view !== 'function'))
-  ))
-}
+import { isRoutesValid } from '../lib/validation/routesValidation'
 
 export default class Router {
   __currentRoute = {}
