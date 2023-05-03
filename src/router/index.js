@@ -58,6 +58,7 @@ export default class Router {
 
   __setNavigationLinkEvents() {
     document.body.addEventListener('click', event => {
+      console.log('something was clicked')
       if (event.target.matches('a[data-link]')) {
         event.preventDefault()
         this.navigateTo(event.target.getAttribute('href'))
@@ -85,6 +86,7 @@ export default class Router {
   }
 
   __renderCurrentView(routeParams) {
-    this.__currentRoute.view.render(this.__viewContainer, routeParams)
+    const execute = this.__currentRoute.view.render || this.__currentRoute.view
+    execute(this.__viewContainer, routeParams)
   }
 }

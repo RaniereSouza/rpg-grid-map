@@ -5,6 +5,7 @@ export default class View extends Component {
 
   constructor() {
     super()
+    this.render = this.render.bind(this)
   }
 
   __setDocumentTitle() {
