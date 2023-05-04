@@ -8,41 +8,41 @@ describe('function #isDimensionValueValid', () => {
 
   // @happy_path
   it('should pass for a positive integer number', () => {
-    // Given
+    // Arrange
     const inputA = 42,
           inputB = 69
-    // When
+    // Act
     const resultA = isDimensionValueValid(inputA),
           resultB = isDimensionValueValid(inputB)
-    // Then
+    // Assert
     resultA.should.be.true
     resultB.should.be.true
   })
 
   // @happy_path
   it('should pass for a string representing a positive integer number', () => {
-    // Given
+    // Arrange
     const inputA = '042',
           inputB = '0069'
-    // When
+    // Act
     const resultA = isDimensionValueValid(inputA),
           resultB = isDimensionValueValid(inputB)
-    // Then
+    // Assert
     resultA.should.be.true
     resultB.should.be.true
   })
 
   // @sad_path
   it('should not pass for an input that is not a number nor a string', () => {
-    // Given
+    // Arrange
     const inputA = null,
           inputB = {},
           inputC = true
-    // When
+    // Act
     const resultA = isDimensionValueValid(inputA),
           resultB = isDimensionValueValid(inputB),
           resultC = isDimensionValueValid(inputC)
-    // Then
+    // Assert
     resultA.should.be.false
     resultB.should.be.false
     resultC.should.be.false
@@ -50,15 +50,15 @@ describe('function #isDimensionValueValid', () => {
 
   // @sad_path
   it('should not pass for a string that doesn\'t represent a number', () => {
-    // Given
+    // Arrange
     const inputA = '',
           inputB = 'NaN',
           inputC = '1,000'
-    // When
+    // Act
     const resultA = isDimensionValueValid(inputA),
           resultB = isDimensionValueValid(inputB),
           resultC = isDimensionValueValid(inputC)
-    // Then
+    // Assert
     resultA.should.be.false
     resultB.should.be.false
     resultC.should.be.false
@@ -66,39 +66,39 @@ describe('function #isDimensionValueValid', () => {
 
   // @sad_path
   it('should not pass for a number zero input (number or string)', () => {
-    // Given
+    // Arrange
     const inputA = 0,
           inputB = '0'
-    // When
+    // Act
     const resultA = isDimensionValueValid(inputA),
           resultB = isDimensionValueValid(inputB)
-    // Then
+    // Assert
     resultA.should.be.false
     resultB.should.be.false
   })
 
   // @sad_path
   it('should not pass for a negative number input (number or string)', () => {
-    // Given
+    // Arrange
     const inputA = -42,
           inputB = '-69'
-    // When
+    // Act
     const resultA = isDimensionValueValid(inputA),
           resultB = isDimensionValueValid(inputB)
-    // Then
+    // Assert
     resultA.should.be.false
     resultB.should.be.false
   })
 
   // @sad_path
   it('should not pass for a decimal/float input (number or string)', () => {
-    // Given
+    // Arrange
     const inputA = 4.2,
           inputB = '6.9'
-    // When
+    // Act
     const resultA = isDimensionValueValid(inputA),
           resultB = isDimensionValueValid(inputB)
-    // Then
+    // Assert
     resultA.should.be.false
     resultB.should.be.false
   })

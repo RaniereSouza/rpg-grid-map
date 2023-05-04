@@ -10,92 +10,92 @@ describe('function #isRoutesValid', () => {
 
   // @happy_path
   it('should pass for an empty array', () => {
-    // Given
+    // Arrange
     const input = []
-    // When
+    // Act
     const result = isRoutesValid(input)
-    // Then
+    // Assert
     result.should.be.true
   })
 
   // @happy_path
   it('should pass for a correctly formed array of routes', () => {
-    // Given
+    // Arrange
     class ViewSubclass extends View { constructor() { super() } }
     const input = [
       {path: '/foo',  view: () => {}},
       {path: '/bar',  view: new View()},
       {path: '/nono', view: new ViewSubclass()},
     ]
-    // When
+    // Act
     const result = isRoutesValid(input)
-    // Then
+    // Assert
     result.should.be.true
   })
 
   // @sad_path
   it('should not pass for an array with some route missing the path', () => {
-    // Given
+    // Arrange
     const input = [
       {path: '/foo', view: () => {}},
       {view: () => {}},
     ]
-    // When
+    // Act
     const result = isRoutesValid(input)
-    // Then
+    // Assert
     result.should.be.false
   })
 
   // @sad_path
   it('should not pass for an array with some route missing the view', () => {
-    // Given
+    // Arrange
     const input = [
       {path: '/foo', view: () => {}},
       {path: '/bar'},
     ]
-    // When
+    // Act
     const result = isRoutesValid(input)
-    // Then
+    // Assert
     result.should.be.false
   })
 
   // @sad_path
   it('should not pass for an array with some route with a path that is not a string', () => {
-    // Given
+    // Arrange
     const input = [
       {path: '/foo',  view: () => {}},
       {path: /\/bar/, view: () => {}},
     ]
-    // When
+    // Act
     const result = isRoutesValid(input)
-    // Then
+    // Assert
     result.should.be.false
   })
 
   // @sad_path
   it('should not pass for an array with some route with a view that is not an instance of View', () => {
-    // Given
+    // Arrange
     class NotAView {}
     const input = [
       {path: '/foo', view: new View()},
       {path: '/bar', view: new NotAView()},
     ]
-    // When
+    // Act
     const result = isRoutesValid(input)
-    // Then
+    // Assert
     result.should.be.false
   })
 
   // @sad_path
   it('should not pass for an array with some route with a view that is not a function', () => {
-    // Given
+    // Arrange
     const input = [
       {path: '/foo', view: () => {}},
       {path: '/bar', view: 'function notAFunction() {}'},
     ]
-    // When
+    // Act
     const result = isRoutesValid(input)
-    // Then
+    // Assert
     result.should.be.false
   })
 })

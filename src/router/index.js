@@ -58,7 +58,6 @@ export default class Router {
 
   __setNavigationLinkEvents() {
     document.body.addEventListener('click', event => {
-      console.log('something was clicked')
       if (event.target.matches('a[data-link]')) {
         event.preventDefault()
         this.navigateTo(event.target.getAttribute('href'))
@@ -76,7 +75,7 @@ export default class Router {
     if (!match) match = {
       route: {
         path: location.pathname,
-        view: {render: () => console.log('404: Not Found')},
+        view: () => console.log('404: Not Found'),
       },
       isMatch: true,
     }

@@ -11,43 +11,43 @@ describe('class #Router', () => {
   describe('(static) method #create', () => {
     // @happy_path
     it('should instantiate correctly with an HTMLElement as viewContainer', () => {
-      // Given
+      // Arrange
       const viewContainer = document.createElement('div'),
             createRouter = () => Router.create(viewContainer)
-      // Then
+      // Assert
       createRouter.should.not.throw
       createRouter().should.be.an.instanceof(Router)
     })
 
     // @happy_path
     it('should instantiate correctly with a valid array of routes', () => {
-      // Given
+      // Arrange
       const viewContainer = document.createElement('div'),
             routes = [{path: '/', view: () => {}}],
             createRouter = () => Router.create(viewContainer, routes)
-      // Then
+      // Assert
       createRouter.should.not.throw
       createRouter().should.be.an.instanceof(Router)
     })
 
     // @sad_path
     it('should not instantiate correctly with a viewContainer that isn\'t an HTMLElement', () => {
-      // Given
+      // Arrange
       const viewContainer = {},
             createRouter = () => Router.create(viewContainer)
-      // Then
+      // Assert
       createRouter.should.throw(TypeError, 'viewContainer argument must be an HTMLElement')
     })
 
     // @sad_path
     it('should not instantiate correctly with routes that that are not a valid array of routes', () => {
-      // Given
+      // Arrange
       const viewContainer = document.createElement('div'),
             badRoutesA = {},
             badRoutesB = ['NaR', null, 42],
             createRouterA = () => Router.create(viewContainer, badRoutesA),
             createRouterB = () => Router.create(viewContainer, badRoutesB)
-      // Then
+      // Assert
       createRouterA.should.throw(TypeError, 'routes argument must be a valid array of routes')
       createRouterB.should.throw(TypeError, 'routes argument must be a valid array of routes')
     })
@@ -56,20 +56,20 @@ describe('class #Router', () => {
   describe('method #navigateTo', () => {
     // @happy_path
     it('should execute the view function when navigating to the correct path', () => {
-      // Given
+      // Arrange
       const viewFunc = vi.fn(() => {}),
             route = {path: '/foo', view: viewFunc},
             viewContainer = document.createElement('div'),
             router = Router.create(viewContainer, [route])
-      // When
+      // Act
       router.navigateTo('/foo')
-      // Then
+      // Assert
       expect(viewFunc).toHaveBeenCalled()
     })
 
     // @happy_path
     it('should load the correct content in the viewContainer when navigating to the correct path', () => {
-      // Given
+      // Arrange
       const htmlTemplateA = '<ul><li>Show</li><li>Foo</li></ul>',
             htmlTemplateB = '<h1>Show</h1><h2>Bar</h2>'
       class ViewSubclassA extends View {
@@ -84,19 +84,19 @@ describe('class #Router', () => {
               {path: '/bar', view: new ViewSubclassB()},
             ],
             router = Router.create(viewContainer, routes)
-      // When
+      // Act
       router.navigateTo('/foo')
-      // Then
+      // Assert
       viewContainer.innerHTML.should.contain(htmlTemplateA)
-      // When
+      // Act
       router.navigateTo('/bar')
-      // Then
+      // Assert
       viewContainer.innerHTML.should.contain(htmlTemplateB)
     })
 
     // @happy_path
     it('should pass the correct route params to the view when navigating to the correct path', () => {
-      // Given
+      // Arrange
       class ViewSubclass extends View { constructor() { super() } }
       const viewA = new ViewSubclass(),
             viewARenderSpy = vi.spyOn(viewA, 'render'),
@@ -107,36 +107,45 @@ describe('class #Router', () => {
               {path: '/bar/:param1/bli/:param2', view: viewB},
             ],
             router = Router.create(viewContainer, routes)
-      // When
+      // Act
       router.navigateTo('/foo/value1/bli/value2')
-      // Then
+      // Assert
       expect(viewARenderSpy).toHaveBeenCalledWith(viewContainer, {param1: 'value1', param2: 'value2'})
-      // When
+      // Act
       router.navigateTo('/bar/value3/bli/value4')
-      // Then
+      // Assert
       expect(viewB).toHaveBeenCalledWith(viewContainer, {param1: 'value3', param2: 'value4'})
     })
 
     // @happy_path
     it.only('should call the method when some <a> in the body with the "data-link" attr is clicked', () => {
-      // Given
-      const consoleLogSpy = vi.spyOn(console, 'log'),
-            viewContainer = document.createElement('div'),
+      // Arrange
+      const viewContainer = document.createElement('div'),
             routes = [{path: '/foo', view: () => {}}],
             router = Router.create(viewContainer, routes),
             routerNavigateToSpy = vi.spyOn(router, 'navigateTo'),
-            navigationLink = document.createElement('a')
-      // When
+            navigationLink = document.createElement('a'),
+            click = new MouseEvent('click', {bubbles: true, cancelable: true})
       navigationLink.setAttribute('href', '/foo')
       navigationLink.setAttribute('data-link', '')
       document.body.appendChild(navigationLink)
-      document.body.click()
-      navigationLink.click()
-      // Then
-      expect(consoleLogSpy).toHaveBeenCalledWith('something was clicked')
+      // Act
+      navigationLink.dispatchEvent(click)
+      // Assert
       expect(routerNavigateToSpy).toHaveBeenCalled()
     })
 
-    it.todo('should log "404: Not Found" when trying to navigate to an unknown path, and nothing else')
+    // @sad_path
+    it.only('should log "404: Not Found" when trying to navigate to an unknown path, and nothing else', () => {
+      // Arrange
+      const consoleLogSpy = vi.spyOn(console, 'log'),
+            viewContainer = document.createElement('div'),
+            routes = [{path: '/foo', view: () => {}}],
+            router = Router.create(viewContainer, routes)
+      // Act
+      router.navigateTo('/bar')
+      // Assert
+      expect(consoleLogSpy).toHaveBeenCalledWith('404: Not Found')
+    })
   })
 })
