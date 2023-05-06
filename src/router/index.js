@@ -57,7 +57,7 @@ export default class Router {
   }
 
   __setNavigationLinkEvents() {
-    document.body.addEventListener('click', event => {
+    window.addEventListener('click', event => {
       if (event.target.matches('a[data-link]')) {
         event.preventDefault()
         this.navigateTo(event.target.getAttribute('href'))

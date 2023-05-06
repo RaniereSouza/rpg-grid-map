@@ -1,5 +1,7 @@
 // @vitest-environment jsdom
 import { describe, it, should as initShouldSyntax, vi, expect } from 'vitest'
+import userEvent from '@testing-library/user-event'
+
 
 import View from '../lib/View'
 
@@ -118,25 +120,25 @@ describe('class #Router', () => {
     })
 
     // @happy_path
-    it.only('should call the method when some <a> in the body with the "data-link" attr is clicked', () => {
+    it.only('should call the method when some <a> in the body with the "data-link" attr is clicked', async () => {
       // Arrange
-      const viewContainer = document.createElement('div'),
+      const user = userEvent.setup({document}),
+            viewContainer = document.createElement('div'),
             routes = [{path: '/foo', view: () => {}}],
             router = Router.create(viewContainer, routes),
             routerNavigateToSpy = vi.spyOn(router, 'navigateTo'),
-            navigationLink = document.createElement('a'),
-            click = new MouseEvent('click', {bubbles: true, cancelable: true})
+            navigationLink = document.createElement('a')
       navigationLink.setAttribute('href', '/foo')
       navigationLink.setAttribute('data-link', '')
       document.body.appendChild(navigationLink)
       // Act
-      navigationLink.dispatchEvent(click)
+      await user.click(navigationLink)
       // Assert
       expect(routerNavigateToSpy).toHaveBeenCalled()
     })
 
     // @sad_path
-    it.only('should log "404: Not Found" when trying to navigate to an unknown path, and nothing else', () => {
+    it('should log "404: Not Found" when trying to navigate to an unknown path, and nothing else', () => {
       // Arrange
       const consoleLogSpy = vi.spyOn(console, 'log'),
             viewContainer = document.createElement('div'),
