@@ -1,7 +1,8 @@
 // @vitest-environment jsdom
-import { describe, it, should as initShouldSyntax, vi, expect } from 'vitest'
-import userEvent from '@testing-library/user-event'
-
+import  {
+          describe, it, should as initShouldSyntax, vi, expect,
+        }         from 'vitest'
+import  userEvent from '@testing-library/user-event'
 
 import View from '../lib/View'
 
@@ -123,17 +124,20 @@ describe('class #Router', () => {
     it.only('should call the method when some <a> in the body with the "data-link" attr is clicked', async () => {
       // Arrange
       const user = userEvent.setup({document}),
+            consoleLogSpy = vi.spyOn(console, 'log'),
             viewContainer = document.createElement('div'),
             routes = [{path: '/foo', view: () => {}}],
             router = Router.create(viewContainer, routes),
             routerNavigateToSpy = vi.spyOn(router, 'navigateTo'),
             navigationLink = document.createElement('a')
       navigationLink.setAttribute('href', '/foo')
-      navigationLink.setAttribute('data-link', '')
+      navigationLink.setAttribute('data-link', true)
+      navigationLink.onclick = e => { e.preventDefault() }
       document.body.appendChild(navigationLink)
       // Act
       await user.click(navigationLink)
       // Assert
+      expect(consoleLogSpy).toHaveBeenCalledWith('blyat')
       expect(routerNavigateToSpy).toHaveBeenCalled()
     })
 

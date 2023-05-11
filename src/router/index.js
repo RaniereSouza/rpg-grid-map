@@ -48,7 +48,7 @@ export default class Router {
   }
 
   __watchForNavigation() {
-    document.addEventListener('DOMContentLoaded', () => {
+    window.addEventListener('DOMContentLoaded', () => {
       this.__setNavigationLinkEvents()
       this.__matchCurrentRoute()
     })
@@ -58,6 +58,7 @@ export default class Router {
 
   __setNavigationLinkEvents() {
     window.addEventListener('click', event => {
+      console.log('blyat')
       if (event.target.matches('a[data-link]')) {
         event.preventDefault()
         this.navigateTo(event.target.getAttribute('href'))
