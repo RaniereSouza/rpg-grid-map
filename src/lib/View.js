@@ -9,7 +9,7 @@ export default class View extends Component {
   }
 
   __setDocumentTitle() {
-    document.title = this.__title
+    !!this.__title && (document.title = this.__title)
   }
 
   render(parent, routeParams) {
