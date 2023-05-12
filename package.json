@@ -7,8 +7,10 @@
     "build:watch": "npm run build -- --watch",
     "serve:dev": "vite --mode development",
     "serve:build": "vite preview",
+    "cy:run": "cypress run --e2e --headless",
     "cy:open": "cypress open --e2e",
-    "test:e2e": "concurrently --kill-others \"npm:build:watch -- --mode test\" \"npm:cy:open\"",
+    "test:e2e": "concurrently \"npm:build -- --mode test\" \"npm:cy:run\"",
+    "test:e2e:open": "concurrently --kill-others \"npm:build:watch -- --mode test\" \"npm:cy:open\"",
     "test:unit": "vitest",
     "test:unit:watch": "vitest --watch --ui"
   },
