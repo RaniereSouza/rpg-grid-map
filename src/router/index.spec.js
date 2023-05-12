@@ -1,8 +1,5 @@
 // @vitest-environment jsdom
-import  {
-          describe, it, should as initShouldSyntax, vi, expect,
-        }         from 'vitest'
-import  userEvent from '@testing-library/user-event'
+import { describe, it, should as initShouldSyntax, vi, expect } from 'vitest'
 
 import View from '../lib/View'
 
@@ -120,27 +117,6 @@ describe('class #Router', () => {
       expect(viewB).toHaveBeenCalledWith(viewContainer, {param1: 'value3', param2: 'value4'})
     })
 
-    // @happy_path
-    it.only('should call the method when some <a> in the body with the "data-link" attr is clicked', async () => {
-      // Arrange
-      const user = userEvent.setup({document}),
-            consoleLogSpy = vi.spyOn(console, 'log'),
-            viewContainer = document.createElement('div'),
-            routes = [{path: '/foo', view: () => {}}],
-            router = Router.create(viewContainer, routes),
-            routerNavigateToSpy = vi.spyOn(router, 'navigateTo'),
-            navigationLink = document.createElement('a')
-      navigationLink.setAttribute('href', '/foo')
-      navigationLink.setAttribute('data-link', true)
-      navigationLink.onclick = e => { e.preventDefault() }
-      document.body.appendChild(navigationLink)
-      // Act
-      await user.click(navigationLink)
-      // Assert
-      expect(consoleLogSpy).toHaveBeenCalledWith('blyat')
-      expect(routerNavigateToSpy).toHaveBeenCalled()
-    })
-
     // @sad_path
     it('should log "404: Not Found" when trying to navigate to an unknown path, and nothing else', () => {
       // Arrange
@@ -152,6 +128,25 @@ describe('class #Router', () => {
       router.navigateTo('/bar')
       // Assert
       expect(consoleLogSpy).toHaveBeenCalledWith('404: Not Found')
+    })
+
+    // @happy_path
+    it('should call the method when some <a> in the body with the "data-link" attr is clicked', () => {
+      // Arrange
+      const viewContainer = document.createElement('div'),
+            routePath = '/foo',
+            routes = [{path: routePath, view: () => {}}],
+            router = Router.create(viewContainer, routes),
+            routerNavigateToSpy = vi.spyOn(router, 'navigateTo'),
+            navigationLink = document.createElement('a')
+      navigationLink.setAttribute('href', routePath)
+      navigationLink.setAttribute('data-link', true)
+      document.body.appendChild(navigationLink)
+      document.dispatchEvent(new Event('DOMContentLoaded', {bubbles: true})) // needed to setup the watchers in the router
+      // Act
+      navigationLink.dispatchEvent(new MouseEvent('click', {bubbles: true}))
+      // Assert
+      expect(routerNavigateToSpy).toHaveBeenCalledWith(routePath)
     })
   })
 })

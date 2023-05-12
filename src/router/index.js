@@ -58,7 +58,6 @@ export default class Router {
 
   __setNavigationLinkEvents() {
     window.addEventListener('click', event => {
-      console.log('blyat')
       if (event.target.matches('a[data-link]')) {
         event.preventDefault()
         this.navigateTo(event.target.getAttribute('href'))
