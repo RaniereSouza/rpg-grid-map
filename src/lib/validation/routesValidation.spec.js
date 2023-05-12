@@ -1,12 +1,12 @@
 // @vitest-environment jsdom
-import { describe, it, should as initShouldSyntax } from 'vitest'
+import { describe, it, should as useShouldSyntax } from 'vitest'
 
 import View from '../View'
 
 import { isRoutesValid } from './routesValidation'
 
 describe('function #isRoutesValid', () => {
-  initShouldSyntax()
+  useShouldSyntax()
 
   // @happy_path
   it('should pass for an empty array', () => {

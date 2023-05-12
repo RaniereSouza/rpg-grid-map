@@ -1,10 +1,10 @@
 // @vitest-environment jsdom
-import { describe, it, should as initShouldSyntax } from 'vitest'
+import { describe, it, should as useShouldSyntax } from 'vitest'
 
 import View from './View'
 
 describe('class #View', () => {
-  initShouldSyntax()
+  useShouldSyntax()
 
   describe('method #render', () => {
     // @happy_path

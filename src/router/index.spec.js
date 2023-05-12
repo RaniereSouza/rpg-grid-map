@@ -1,12 +1,12 @@
 // @vitest-environment jsdom
-import { describe, it, should as initShouldSyntax, vi, expect } from 'vitest'
+import { describe, it, should as useShouldSyntax, vi, expect } from 'vitest'
 
 import View from '../lib/View'
 
 import Router from '.'
 
 describe('class #Router', () => {
-  initShouldSyntax()
+  useShouldSyntax()
 
   describe('(static) method #create', () => {
     // @happy_path
