@@ -146,7 +146,10 @@ describe('class #Router', () => {
       // Act
       navigationLink.dispatchEvent(new MouseEvent('click', {bubbles: true}))
       // Assert
-      expect(routerNavigateToSpy).toHaveBeenCalledWith(routePath)
+      expect(routerNavigateToSpy)
+        .toHaveBeenCalledOnce()
+        .and
+        .toHaveBeenCalledWith(routePath)
     })
   })
 })

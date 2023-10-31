@@ -109,23 +109,14 @@ export default class MapCreationView extends View {
   }
 
   __afterRender() {
-    this.__gridMap = GridMap.create('#map-creation-canvas')
+    const viewInstance = this
+    viewInstance.__gridMap = GridMap.create('#map-creation-canvas')
 
     const confirmButton = document.querySelector('#map-creation-confirm-button'),
           widthInput    = document.querySelector('#map-creation-width'),
           heightInput   = document.querySelector('#map-creation-height')
 
     confirmButton.disabled = true
-
-    confirmButton.addEventListener('click', event => {
-      event.preventDefault()
-
-      const width  = parseInt(widthInput.value),
-            height = parseInt(heightInput.value)
-
-      this.__gridMap.initBlankGrid(width, height)
-      document.querySelector('#map-creation-form').classList.add('hidden')
-    })
 
     function toggleDisableButtonOnInvalidInput(event) {
       const input = event.target
@@ -138,7 +129,31 @@ export default class MapCreationView extends View {
       else confirmButton.disabled = false
     }
 
+    function extractInputDimensions() {
+      const width  = parseInt(widthInput.value),
+            height = parseInt(heightInput.value)
+      return { width, height }
+    }
+
+    function createGridWithDimensions(width, height) {
+      viewInstance.__gridMap.initBlankGrid(width, height)
+    }
+
+    function hideForm() {
+      document.querySelector('#map-creation-form').classList.add('hidden')
+    }
+
+    function handleCreationConfirmation(event) {
+      event.preventDefault()
+
+      const { width, height } = extractInputDimensions()
+      createGridWithDimensions(width, height)
+
+      hideForm()
+    }
+
     widthInput.addEventListener('input', toggleDisableButtonOnInvalidInput)
     heightInput.addEventListener('input', toggleDisableButtonOnInvalidInput)
+    confirmButton.addEventListener('click', handleCreationConfirmation)
   }
 }

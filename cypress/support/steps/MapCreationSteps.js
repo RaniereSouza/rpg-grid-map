@@ -18,7 +18,7 @@ Given(
   }
 )
 
-When('I( try to) confirm the grid map creation', () => {
+When('I confirm the grid map creation', () => {
   mapCreationPage.confirmGridCreation()
 })
 
