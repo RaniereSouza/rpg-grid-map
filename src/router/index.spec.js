@@ -11,10 +11,10 @@ describe('class #Router', () => {
     it('should instantiate correctly with an HTMLElement as viewContainer', () => {
       // Arrange
       const viewContainer = document.createElement('div'),
-            createRouter = () => Router.create(viewContainer)
+            routerCreation = () => Router.create(viewContainer)
       // Assert
-      createRouter.should.not.throw
-      createRouter().should.be.an.instanceof(Router)
+      routerCreation.should.not.throw
+      routerCreation().should.be.an.instanceof(Router)
     })
 
     // @happy_path
@@ -22,19 +22,19 @@ describe('class #Router', () => {
       // Arrange
       const viewContainer = document.createElement('div'),
             routes = [{path: '/', view: () => {}}],
-            createRouter = () => Router.create(viewContainer, routes)
+            routerCreation = () => Router.create(viewContainer, routes)
       // Assert
-      createRouter.should.not.throw
-      createRouter().should.be.an.instanceof(Router)
+      routerCreation.should.not.throw
+      routerCreation().should.be.an.instanceof(Router)
     })
 
     // @sad_path
     it('should not instantiate correctly with a viewContainer that isn\'t an HTMLElement', () => {
       // Arrange
       const viewContainer = {},
-            createRouter = () => Router.create(viewContainer)
+            routerCreation = () => Router.create(viewContainer)
       // Assert
-      createRouter.should.throw(TypeError, 'viewContainer argument must be an HTMLElement')
+      routerCreation.should.throw(TypeError, 'viewContainer argument must be an HTMLElement')
     })
 
     // @sad_path
@@ -43,11 +43,11 @@ describe('class #Router', () => {
       const viewContainer = document.createElement('div'),
             badRoutesA = {},
             badRoutesB = ['NaR', null, 42],
-            createRouterA = () => Router.create(viewContainer, badRoutesA),
-            createRouterB = () => Router.create(viewContainer, badRoutesB)
+            routerCreationA = () => Router.create(viewContainer, badRoutesA),
+            routerCreationB = () => Router.create(viewContainer, badRoutesB)
       // Assert
-      createRouterA.should.throw(TypeError, 'routes argument must be a valid array of routes')
-      createRouterB.should.throw(TypeError, 'routes argument must be a valid array of routes')
+      routerCreationA.should.throw(TypeError, 'routes argument must be a valid array of routes')
+      routerCreationB.should.throw(TypeError, 'routes argument must be a valid array of routes')
     })
   })
 
@@ -108,35 +108,32 @@ describe('class #Router', () => {
     })
 
     // @sad_path
-    it('should log "404: Not Found" when trying to navigate to an unknown path, and nothing else', () => {
+    it('should log "404: Not Found" when trying to navigate to an unknown path as default reaction', () => {
       // Arrange
-      const consoleLogSpy = vi.spyOn(console, 'log'),
+      const consoleLog = vi.spyOn(console, 'log'),
             viewContainer = document.createElement('div'),
             routes = [{path: '/foo', view: () => {}}],
             router = Router.create(viewContainer, routes)
       // Act
       router.navigateTo('/bar')
       // Assert
-      expect(consoleLogSpy).toHaveBeenCalledWith('404: Not Found')
+      expect(consoleLog).toHaveBeenCalledWith('404: Not Found')
     })
 
     // @happy_path
     it('should call the method when some <a> in the body with the "data-link" attr is clicked', () => {
       // Arrange
-      const viewContainer = document.createElement('div'),
-            routePath = '/foo',
-            routes = [{path: routePath, view: () => {}}],
-            router = Router.create(viewContainer, routes),
-            routerNavigateToSpy = vi.spyOn(router, 'navigateTo'),
-            navigationLink = document.createElement('a')
+      const viewContainer = document.createElement('div'), routePath = '/foo',
+            routes = [{path: routePath, view: () => {}}], router = Router.create(viewContainer, routes),
+            routerNavigateTo = vi.spyOn(router, 'navigateTo'), navigationLink = document.createElement('a')
       navigationLink.setAttribute('href', routePath)
       navigationLink.setAttribute('data-link', true)
       document.body.appendChild(navigationLink)
-      document.dispatchEvent(new Event('DOMContentLoaded', {bubbles: true})) // needed to setup the watchers in the router
       // Act
+      document.dispatchEvent(new Event('DOMContentLoaded', {bubbles: true})) // needed to setup the watchers in the router
       navigationLink.dispatchEvent(new MouseEvent('click', {bubbles: true}))
       // Assert
-      expect(routerNavigateToSpy)
+      expect(routerNavigateTo)
         .toHaveBeenCalledOnce()
         .and
         .toHaveBeenCalledWith(routePath)
