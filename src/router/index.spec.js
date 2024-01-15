@@ -1,8 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, should as useShouldSyntax, vi, expect } from 'vitest'
 
-import View from '../lib/View'
-
 import Router from '.'
 
 describe('class #Router', () => {
@@ -68,38 +66,30 @@ describe('class #Router', () => {
     })
 
     // @happy_path
-    it('should load the correct content in the viewContainer when navigating to the correct path', () => {
+    it('should execute the view render method when navigating to the correct path', () => {
       // Arrange
-      const htmlTemplateA = '<ul><li>Show</li><li>Foo</li></ul>',
-            htmlTemplateB = '<h1>Show</h1><h2>Bar</h2>'
-      class ViewSubclassA extends View {
-        constructor() { super() } __htmlTemplate() { return htmlTemplateA }
-      }
-      class ViewSubclassB extends View {
-        constructor() { super() } __htmlTemplate() { return htmlTemplateB }
-      }
+      const viewA = { render: vi.fn(() => {}) }
+      const viewB = { render: vi.fn(() => {}) }
       const viewContainer = document.createElement('div'),
             routes = [
-              {path: '/foo', view: new ViewSubclassA()},
-              {path: '/bar', view: new ViewSubclassB()},
+              {path: '/foo', view: viewA},
+              {path: '/bar', view: viewB},
             ],
             router = Router.create(viewContainer, routes)
       // Act
       router.navigateTo('/foo')
       // Assert
-      viewContainer.innerHTML.should.contain(htmlTemplateA)
+      expect(viewA.render).toHaveBeenCalledWith(viewContainer, undefined)
       // Act
       router.navigateTo('/bar')
       // Assert
-      viewContainer.innerHTML.should.contain(htmlTemplateB)
+      expect(viewB.render).toHaveBeenCalledWith(viewContainer, undefined)
     })
 
     // @happy_path
     it('should pass the correct route params to the view when navigating to the correct path', () => {
       // Arrange
-      class ViewSubclass extends View { constructor() { super() } }
-      const viewA = new ViewSubclass(),
-            viewARenderSpy = vi.spyOn(viewA, 'render'),
+      const viewA = { render: vi.fn(() => {}) },
             viewB = vi.fn(() => {}),
             viewContainer = document.createElement('div'),
             routes = [
@@ -110,7 +100,7 @@ describe('class #Router', () => {
       // Act
       router.navigateTo('/foo/value1/bli/value2')
       // Assert
-      expect(viewARenderSpy).toHaveBeenCalledWith(viewContainer, {param1: 'value1', param2: 'value2'})
+      expect(viewA.render).toHaveBeenCalledWith(viewContainer, {param1: 'value1', param2: 'value2'})
       // Act
       router.navigateTo('/bar/value3/bli/value4')
       // Assert
