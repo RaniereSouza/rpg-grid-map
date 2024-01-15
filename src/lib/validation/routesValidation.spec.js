@@ -1,12 +1,12 @@
 // @vitest-environment jsdom
 import { describe, it, should as useShouldSyntax } from 'vitest'
 
-import View from '../View'
-
 import { isRoutesValid } from './routesValidation'
 
 describe('function #isRoutesValid', () => {
   useShouldSyntax()
+
+  class ViewClass { render() {} }
 
   // @happy_path
   it('should pass for an empty array', () => {
@@ -21,10 +21,10 @@ describe('function #isRoutesValid', () => {
   // @happy_path
   it('should pass for a correctly formed array of routes', () => {
     // Arrange
-    class ViewSubclass extends View { constructor() { super() } }
+    class ViewSubclass extends ViewClass { constructor() { super() } }
     const input = [
       {path: '/foo',  view: () => {}},
-      {path: '/bar',  view: new View()},
+      {path: '/bar',  view: new ViewClass()},
       {path: '/nono', view: new ViewSubclass()},
     ]
     // Act
@@ -73,11 +73,11 @@ describe('function #isRoutesValid', () => {
   })
 
   // @sad_path
-  it('should not pass for an array with some route with a view that is not an instance of View', () => {
+  it('should not pass for an array with some route with a view that doesn\'t implement a render method', () => {
     // Arrange
     class NotAView {}
     const input = [
-      {path: '/foo', view: new View()},
+      {path: '/foo', view: new ViewClass()},
       {path: '/bar', view: new NotAView()},
     ]
     // Act
