@@ -1,7 +1,7 @@
 {
   "name": "rpg-grid-map",
   "private": true,
-  "version": "0.1.2",
+  "version": "0.1.3",
   "scripts": {
     "build": "vite build",
     "build:watch": "npm run build -- --watch",
