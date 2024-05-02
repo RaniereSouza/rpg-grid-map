@@ -13,6 +13,7 @@ dist
 dist-ssr
 cypress/downloads
 cypress/screenshots
+cypress/videos
 
 # Reference files with potentially sensitive data
 *.local

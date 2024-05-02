@@ -1,4 +1,5 @@
-import ThreeJSContext, { ThreeJSObjectCreator } from './ThreeJSContext'
+import ThreeJSContext       from './ThreeJSContext'
+import ThreeJSObjectCreator from './ThreeJSObjectCreator'
 
 export default class GridMap {
   static __objectCreator = null
