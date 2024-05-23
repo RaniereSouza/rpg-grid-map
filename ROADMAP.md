@@ -8,13 +8,13 @@
 - [x] Upgrade from Cypress 10.x to Cypress 12.x
 - [x] Configure Vitest for Unit Testing
 - [ ] **Consolidate Roadmap `IN PROGRESS`**
+- [ ] Configure GitHub protection rules for branches and pull requests
 - [ ] Upgrade from Vite 4.x to Vite 5.x (more than 1 year stale)
 - [ ] Upgrade from Cypress 12.x to Cypress 13.x (more than 1 year stale)
 - [ ] Upgrade from Vitest 0.x to Vitest 1.x (dev release to production release)
 - [ ] Upgrade from Three.js r140 to Three.js r164 (more than 2 years stale)
 - [ ] Define and model the initial Architecture for the application
 - [ ] Configure GitHub Actions for CI
-- [ ] Configure GitHub protection rules for branches and pull requests
 - [ ] Running Cypress from Docker container instead of local installation
 - [ ] Dockerize the application
 - [ ] Setup a staging environment to deploy and playtest the application
