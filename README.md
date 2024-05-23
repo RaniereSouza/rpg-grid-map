@@ -11,6 +11,8 @@ With those tools the DMs can manage the entire game if they want, even character
 * Cucumber/Gherkin
 * Cypress
 * Vite
+* Vitest
+* Unit testing
 * Single Page Application (SPA)
 * HTML5/CSS3/JavaScript
 * Vanilla JS
