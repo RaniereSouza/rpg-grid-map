@@ -7,7 +7,7 @@
 - [x] Upgrade from Vite 2.x to Vite 4.x
 - [x] Upgrade from Cypress 10.x to Cypress 12.x
 - [x] Configure Vitest for Unit Testing
-- [ ] **Consolidate Roadmap `IN PROGRESS`**
+- [ ] **Consolidate Roadmap 1.0 `IN PROGRESS`**
 - [ ] Configure GitHub protection rules for branches and pull requests
 - [ ] Upgrade from Vite 4.x to Vite 5.x (more than 1 year stale)
 - [ ] Upgrade from Cypress 12.x to Cypress 13.x (more than 1 year stale)
