@@ -126,17 +126,15 @@ describe('class #Router', () => {
       const viewContainer = document.createElement('div'), routePath = '/foo',
             routes = [{path: routePath, view: () => {}}], router = Router.create(viewContainer, routes),
             routerNavigateTo = vi.spyOn(router, 'navigateTo'), navigationLink = document.createElement('a')
-      navigationLink.setAttribute('href', routePath)
-      navigationLink.setAttribute('data-link', true)
+      navigationLink.setAttribute('href', routePath); navigationLink.setAttribute('data-link', true)
       document.body.appendChild(navigationLink)
-      // Act
       document.dispatchEvent(new Event('DOMContentLoaded', {bubbles: true})) // needed to setup the watchers in the router
+      // Act
       navigationLink.dispatchEvent(new MouseEvent('click', {bubbles: true}))
       // Assert
       expect(routerNavigateTo)
         .toHaveBeenCalledOnce()
-        .and
-        .toHaveBeenCalledWith(routePath)
+        .and.toHaveBeenCalledWith(routePath)
     })
   })
 })
