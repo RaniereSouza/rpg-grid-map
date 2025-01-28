@@ -41,12 +41,18 @@ export default class Router {
     return new RegExp(pathRegexString)
   }
 
-  __newWindowListenerToStash({ stash, eventType, newCallback }) {
-    stash.forEach((callback, index) => {
+  /**
+   * TODO: Since it's just removing old listeners and replacing them with one new,
+   * I think there are better ways to handle it... Maybe just a single reference
+   * instead of an array of callbacks? What about the case of more than one router,
+   * how should this behave? Anyway, the current strategy seems inefficient
+   */
+  __registerWindowListener({ callbacksList, eventType, newCallback }) {
+    callbacksList.forEach((callback, index) => {
       if (!callback) return
-      window.removeEventListener(eventType, callback); stash[index] = null
+      window.removeEventListener(eventType, callback); callbacksList[index] = null // <- Probably a waste of memory, removed callbacks just become null values in the array
     })
-    stash.push(newCallback); window.addEventListener(eventType, newCallback)
+    callbacksList.push(newCallback); window.addEventListener(eventType, newCallback) // <- The only thing remaining in the array is one valid callback and a bunch of null values
   }
 
   __onDOMContentLoaded() {
@@ -58,12 +64,12 @@ export default class Router {
   }
 
   __watchForNavigation() {
-    this.__newWindowListenerToStash({
-      stash: domContentLoadedCallbacks, eventType: 'DOMContentLoaded',
+    this.__registerWindowListener({
+      callbacksList: domContentLoadedCallbacks, eventType: 'DOMContentLoaded',
       newCallback: this.__onDOMContentLoaded.bind(this)
     })
-    this.__newWindowListenerToStash({
-      stash: popstateCallbacks, eventType: 'popstate',
+    this.__registerWindowListener({
+      callbacksList: popstateCallbacks, eventType: 'popstate',
       newCallback: this.__onPopstate.bind(this)
     })
   }
@@ -75,8 +81,8 @@ export default class Router {
   }
 
   __setNavigationLinkEvents() {
-    this.__newWindowListenerToStash({
-      stash: clickNavigationLinkCallbacks, eventType: 'click',
+    this.__registerWindowListener({
+      callbacksList: clickNavigationLinkCallbacks, eventType: 'click',
       newCallback: this.__onClickNavigationLink.bind(this)
     })
   }
@@ -96,7 +102,7 @@ export default class Router {
   }
 
   __renderCurrentView(routeParams) {
-    const execute = this.__currentRoute.view.render || this.__currentRoute.view
-    execute(this.__viewContainer, routeParams)
+    const render = this.__currentRoute.view.render || this.__currentRoute.view
+    render(this.__viewContainer, routeParams)
   }
 }
