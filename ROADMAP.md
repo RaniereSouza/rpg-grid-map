@@ -1,5 +1,8 @@
 # ROADMAP 1.0
 
+> **:warning: DISCLAIMER:**
+> The development process of this project will depend a lot on another personal project, the [Heimdall Visual Testing Tool](https://github.com/ranitopus/heimdall-visual-test). So, until that other project reaches at least some level of maturity with it's features, further development in here might be slowed or postponed (it's already happening). When this becomes no loger an issue, it's going to be informed here.
+
 ## Architecture, tooling & codebase
 ### Technical milestones
 - [x] Configure Vite for Web (Front-end) JavaScript development, build system and bundling
