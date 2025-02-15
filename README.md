@@ -11,6 +11,9 @@ With those tools the DMs can manage the entire game if they want, even character
 * Cucumber/Gherkin
 * Cypress
 * Vite
+* TDD (Test Driven Development)
+* Vitest
+* Unit testing, Integration testing, E2E testing
 * Single Page Application (SPA)
 * HTML5/CSS3/JavaScript
 * Vanilla JS
@@ -20,6 +23,9 @@ With those tools the DMs can manage the entire game if they want, even character
 * Docker/Docker Compose
 * Monorepo
 * GitHub Actions (CI/CD)
+* Feature flags
+* Log levels
+* Metrics/analytics monitoring
 * (More descriptions soon...)
 
 ## Known Issues
